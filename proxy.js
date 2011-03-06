@@ -24,7 +24,9 @@ var options = {
   cert: fs.readFileSync('cert/server.crt')
 };
 
+
 https.createServer(options, function(serverRequest, serverResponse) {
+
   var clientRequest = new ProxyRequest(serverRequest).request(
     function(clientResponse) {
       new ProxyResponse(clientResponse).write(serverResponse);
@@ -61,12 +63,12 @@ var SRC_URL_PATTERN = new RegExp(
     "('|\"|&#39;|&apos;|&quot;)" + //url_prefix
     "(http|https|)://([^/'\"]+)" +//scheme, domain
     "(/?[^'\"]*)('|\"|&#39;|&apos;|&quot;)", //path, url_suffix
-  'i'
+  'ig'
 );
 
 //prefix, scheme, domain, path, suffix
 var CSS_URL_PATTERN =
-  / (\(\s * ['"]?\s*)(http|https|):?//([^\/]*)(\/[^\)]*?)(\s*['\']?\s*\))/i
+  /(\(\s*['"]?\s*)(http|https|):?\/\/([^\/]*)(\/[^\)]*?)(\s*['\"]?\s*\))/ig;
 
 //TODO: var FACEBOOK_PATTERN = http:\/\/www\.google\.com\/
 
@@ -82,13 +84,18 @@ ProxyRequest.prototype = {
   request: function(callback) {
     var options = {
       method: this._request.method,
-      url: this._request.url,
+      path: this._request.url,
       host: this.decodeHost(this._request.headers.host),
       port: this.port,
       headers: this.decodeHeaders(this._request.headers)
     };
     sys.puts('request with options ' + sys.inspect(options));
-    return this.scheme.request(options, callback);
+    var request = this.scheme.request(options, callback);
+    if (this._request.body) {
+      request.write(this._request.body);
+    }
+    request.end();
+    return request;
   },
 
   decodeHost: function(host) {
@@ -99,11 +106,11 @@ ProxyRequest.prototype = {
   },
 
   decodeReferer: function(referer) {
-    var match = referer.match(REQUEST_HOST_PATTERN.search);
+    var match = referer.match(REQUEST_HOST_PATTERN);
     if (match) {
-      var scheme = match[2] === 's' ? https : http;
+      var scheme = match[2] === 's' ? 'https' : 'http';
       //host = match[1], path = match[3]
-      return scheme + '://' + match[1] + match[3];
+      return scheme + '://' + match[1] + (match[3] || '');
     } else {
       console.log('error to parse referer');
       return '';
@@ -118,13 +125,11 @@ ProxyRequest.prototype = {
       if (lname === 'host') {
         continue;
       }else if (lname === 'referer') {
+        sys.puts('referer=' + value);
         value = this.decodeReferer(value);
+        sys.puts('decodedReferer=' + value);
       }
-      //else if(lname === 
-'
-cookie
-'
-) {
+      //else if(lname === 'cookie') {
       //}
       decodedHeader[name] = value;
     }
@@ -176,7 +181,6 @@ ProxyResponse.prototype = {
       unzipStream.setEncoding(charset);
 
       unzipStream.addListener('data', function(data) {
-          sys.puts('unzipStream on data');
           var decodedBody = that.decodeBody(data.toString());
           zipStream.write(decodedBody);
         })
@@ -188,7 +192,6 @@ ProxyResponse.prototype = {
         });
 
       zipStream.addListener('data' , function(data) {
-          sys.puts('zipStream on data');
           serverResponse.write(data.toString('binary'), 'binary');
         })
       .addListener('error', function(err) {
@@ -207,7 +210,7 @@ ProxyResponse.prototype = {
             serverResponse.write(that.decodeBody(chunk), charset);
           }
         }else {
-          serverResponse.write(data);
+          serverResponse.write(chunk);
         }
       });
 
@@ -241,23 +244,32 @@ ProxyResponse.prototype = {
   },
 
   decodeBody: function(data) {
-    return data.replace(RESPONSE_HOST_PATTERN,
-      function(full, prefix, fullScheme, scheme, domain, suffix) {
-        sys.puts('match:' + full);
-        sys.puts('prefix:' + prefix);
-        sys.puts('fullScheme:' + fullScheme);
-        sys.puts('scheme:' + scheme);
-        sys.puts('domain:' + domain);
-        sys.puts('suffix:' + suffix);
-        if (fullScheme === undefined) {
-          return prefix + domain + '.h.' + SERVER_NAME_AND_PORT + suffix;
-        }else {
-          return prefix + 'https://' + domain +
-            scheme === 'https' ? '.s.' : '.h.' +
-            SERVER_NAME_AND_PORT +
-            suffix;
-        }
+    var data = data.replace(SRC_URL_PATTERN,
+      function(full, attr_prefix, attr, attr_suffix, 
+          url_prefix, scheme, domain, path, url_suffix) {
+        var result = attr_prefix + attr + attr_suffix + url_prefix +
+          'https://' + domain +
+          (scheme === 'https' ? '.s.' : '.h.') +
+          SERVER_NAME_AND_PORT +
+          path +
+          url_suffix;
+        sys.puts(result);
+        return result;
       });
+
+    data = data.replace(CSS_URL_PATTERN,
+      function(full, prefix, scheme, domain, path, suffix) {
+        var result = prefix +
+          'https://' + domain +
+          (scheme === 'https' ? '.s.' : '.h.') +
+          SERVER_NAME_AND_PORT +
+          path +
+          suffix;
+        sys.puts(result);
+        return result;
+      });
+
+    return data;
   },
 
   decodeCookies: function(cookies) {
