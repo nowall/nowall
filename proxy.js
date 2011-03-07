@@ -1,55 +1,59 @@
 /**
  * @author: guileen@gmail.com
  */
-/**********
- * config *
- **********/
-var SERVER_NAME_AND_PORT = SERVER_NAME = 'dev';
-var SERVER_PORT = 8000;
-var USE_HTTPS = 'ALWAYS'; // AUTO, NEVER
 
-if (SERVER_PORT != 443)
-  SERVER_NAME_AND_PORT += ':' + SERVER_PORT;
-/********
- * main *
- ********/
+//TODO: More test
+//TODO: User controll
+//TODO: better logger
+
 var https = require('https'),
   http = require('http'),
   compressor = require('compressor'),
-  sys = require('sys'),
-  fs = require('fs');
+  sys = require('sys');
 
-var options = {
-  key: fs.readFileSync('cert/server.key'),
-  cert: fs.readFileSync('cert/server.crt')
+
+/**
+ * options : server, port, useHttps
+ */
+var Proxy = exports.Proxy = function(options) {
+
+  this.server = options.server;
+  this.port = options.port || 443;
+  this.useHttps = options.useHttps === undefined ? this.port == 443 : true;
+  if (this.port === 443 || this.port === 80) {
+    this.serverAndPort = this.server;
+  }else {
+    this.serverAndPort = this.server + ':' + this.port;
+  }
+
+  this.hostPattern = new RegExp(
+    '([a-z0-9\\-\\.]+)\\.(h|s)\\.' + //domain, schemeFlag
+    this.serverAndPort.replace(/\./g, '\\.') +  //server
+    '(\\/.*)?'); //path or not
+
 };
 
+Proxy.prototype.handle = function(req, res) {
 
-https.createServer(options, function(serverRequest, serverResponse) {
-
-  var clientRequest = new ProxyRequest(serverRequest).request(
+  var options = this;
+  var clientRequest = new ProxyRequest(options, req).request(
     function(clientResponse) {
-      new ProxyResponse(clientResponse).write(serverResponse);
+      new ProxyResponse(options, clientResponse).write(res);
     });
 
-  serverRequest.on('data', function(data) {
+  req.on('data', function(data) {
       clientRequest.write(data);
     });
 
-  serverRequest.on('end', function() {
+  req.on('end', function() {
       clientRequest.end();
     });
 
-}).listen(SERVER_PORT);
+};
 
 /****************
  * common utils *
  ****************/
-
-var REQUEST_HOST_PATTERN = new RegExp(
-  '([a-z0-9\\-\\.]+)\\.(h|s)\\.' + //domain, schemeFlag
-  SERVER_NAME_AND_PORT.replace(/\./g, '\\.') +  //server
-  '(\\/.*)?'); //path or not
 
 var RESPONSE_HOST_PATTERN =
   /([^\w])((https|http):\/\/)?([a-z0-9\-][a-z0-9\-\.]*\.[a-z]{2,4})([^\w\d])/g;
@@ -75,7 +79,8 @@ var CSS_URL_PATTERN =
 /****************
  * ProxyRequest *
  ****************/
-var ProxyRequest = function(request) {
+var ProxyRequest = function(options, request) {
+  this.options = options;
   this._request = request;
 };
 
@@ -89,24 +94,31 @@ ProxyRequest.prototype = {
       port: this.port,
       headers: this.decodeHeaders(this._request.headers)
     };
-    sys.puts('request with options ' + sys.inspect(options));
+    //sys.puts('request with options ' + sys.inspect(options));
     var request = this.scheme.request(options, callback);
     if (this._request.body) {
       request.write(this._request.body);
     }
     request.end();
+    request.on('error', function(err) {
+        sys.puts('client request error:' + sys.inspect(err));
+      });
     return request;
   },
 
   decodeHost: function(host) {
-    var match = REQUEST_HOST_PATTERN.exec(host);
-    this.scheme = match[2] === 's' ? https : http;
-    this.port = match[2] === 's' ? 443 : 80;
-    return match[1];
+    var match = this.options.hostPattern.exec(host);
+    if (match) {
+      this.scheme = match[2] === 's' ? https : http;
+      this.port = match[2] === 's' ? 443 : 80;
+      return match[1];
+    }else {
+      throw new Error('not a proxy request');
+    }
   },
 
   decodeReferer: function(referer) {
-    var match = referer.match(REQUEST_HOST_PATTERN);
+    var match = referer.match(this.options.hostPattern);
     if (match) {
       var scheme = match[2] === 's' ? 'https' : 'http';
       //host = match[1], path = match[3]
@@ -125,9 +137,7 @@ ProxyRequest.prototype = {
       if (lname === 'host') {
         continue;
       }else if (lname === 'referer') {
-        sys.puts('referer=' + value);
         value = this.decodeReferer(value);
-        sys.puts('decodedReferer=' + value);
       }
       //else if(lname === 'cookie') {
       //}
@@ -141,7 +151,8 @@ ProxyRequest.prototype = {
 /*****************
  * ProxyResponse *
  *****************/
-var ProxyResponse = function(clientResponse) {
+var ProxyResponse = function(options, clientResponse) {
+  this.options = options;
   this.response = clientResponse;
   this.headers = this.decodeHeaders(this.response.headers);
 };
@@ -159,11 +170,6 @@ ProxyResponse.prototype = {
     var contentEncoding = this.response.headers['content-encoding'];
     var charset = /charset=([\w\d\-]+)/.exec(contentType);
     charset = charset && charset[1] || 'utf8';
-
-    sys.puts(sys.inspect('contentType is:' + contentType));
-    sys.puts(sys.inspect('isText is :' + isText));
-    sys.puts(sys.inspect('contentEncoding is:' + contentEncoding));
-    sys.puts(sys.inspect('charset is:' + charset));
 
     var zipStream, unzipStream;
     if (contentEncoding === 'gzip') {
@@ -225,7 +231,7 @@ ProxyResponse.prototype = {
   },
 
   decodeHeaders: function(headers) {
-    sys.puts('response headers:\n' + sys.inspect(headers));
+    //sys.puts('response headers:\n' + sys.inspect(headers));
     var decodedHeaders = {};
     for (var name in headers) {
       var lname = name.toLowerCase();
@@ -239,21 +245,21 @@ ProxyResponse.prototype = {
       }
       decodedHeaders[name] = value;
     }
-    sys.puts('decodedHeaders:\n' + sys.inspect(decodedHeaders));
+    //sys.puts('decodedHeaders:\n' + sys.inspect(decodedHeaders));
     return decodedHeaders;
   },
 
   decodeBody: function(data) {
+    var that = this;
     var data = data.replace(SRC_URL_PATTERN,
       function(full, attr_prefix, attr, attr_suffix, 
           url_prefix, scheme, domain, path, url_suffix) {
         var result = attr_prefix + attr + attr_suffix + url_prefix +
           'https://' + domain +
           (scheme === 'https' ? '.s.' : '.h.') +
-          SERVER_NAME_AND_PORT +
+          that.options.serverAndPort +
           path +
           url_suffix;
-        sys.puts(result);
         return result;
       });
 
@@ -262,10 +268,9 @@ ProxyResponse.prototype = {
         var result = prefix +
           'https://' + domain +
           (scheme === 'https' ? '.s.' : '.h.') +
-          SERVER_NAME_AND_PORT +
+          that.options.serverAndPort +
           path +
           suffix;
-        sys.puts(result);
         return result;
       });
 
@@ -294,10 +299,10 @@ ProxyResponse.prototype = {
         has_domain = domain_pattern.exec(cookie),
         domain = has_domain && has_domain[2];
 
-    if (is_secure && USE_HTTPS === 'NEVER')
+    if (is_secure && !this.options.useHttps)
         cookie = cookie.replace(secure_pattern, '$1HttpOnly$3');
 
-    if (is_http && USE_HTTPS === 'ALWAYS')
+    if (is_http && this.options.useHttps)
         cookie = cookie.replace(httponly_pattern, '$1Secure$3');
 
     var decodedCookies;
@@ -305,15 +310,15 @@ ProxyResponse.prototype = {
     if (domain) {
       if (is_secure) {
         decodedCookies =
-          [cookie.replace(domain_pattern, '$1$2.s.' + SERVER_NAME + '$3')];
+          [cookie.replace(domain_pattern, '$1$2.s.' + this.options.server + '$3')];
       }else if (is_http) {
         decodedCookies =
-          [cookie.replace(domain_pattern, '$1$2.h.' + SERVER_NAME + '$3')];
+          [cookie.replace(domain_pattern, '$1$2.h.' + this.options.server + '$3')];
       }else {
         decodedCookies =
           [
-            cookie.replace(domain_pattern, '$1$2.s.' + SERVER_NAME + '$3'),
-            cookie.replace(domain_pattern, '$1$2.h.' + SERVER_NAME + '$3')
+            cookie.replace(domain_pattern, '$1$2.s.' + this.options.server + '$3'),
+            cookie.replace(domain_pattern, '$1$2.h.' + this.options.server + '$3')
           ];
       }
     }else {
@@ -328,7 +333,7 @@ ProxyResponse.prototype = {
     if (match) {
       return 'https://' + match[3] +
         match[2] === 'https' ? '.s.' : '.h.' +
-        SERVER_NAME_AND_PORT +
+        this.options.serverAndPort +
         match[4] || '';
     }
     return location;
