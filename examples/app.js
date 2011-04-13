@@ -1,10 +1,10 @@
 var https = require('https'),
   fs = require('fs'),
-  Proxy = require('../lib/proxy').Proxy;
+  Proxy = require(__dirname + '/../lib/proxy').Proxy;
 
 var options = {
-  key: fs.readFileSync('cert/server.key'),
-  cert: fs.readFileSync('cert/server.crt')
+  key: fs.readFileSync(__dirname + '/../cert/server.key'),
+  cert: fs.readFileSync(__dirname + '/../cert/server.crt')
 };
 
 var SERVER_PORT = 8000;
