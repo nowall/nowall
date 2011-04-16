@@ -12,7 +12,10 @@ options =
   cert: fs.readFileSync __dirname + "/cert/server.crt"
 
 https_server = https.createServer options, (req, res) ->
-  proxy.handle(req, res)
+  try
+    proxy.handle(req, res)
+  catch Error e
+    console.log e.stack
 
 http_server = http.createServer (req, res) ->
   if req.url is '/'
