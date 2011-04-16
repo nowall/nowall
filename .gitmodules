@@ -1,0 +1,12 @@
+[submodule "support/compressor"]
+	path = support/compressor
+	url = git://github.com/guileen/node-compress.git
+[submodule "support/multi-node"]
+	path = support/multi-node
+	url = git://github.com/guileen/multi-node
+[submodule "support/myproxy"]
+	path = support/myproxy
+	url = git@notes.li:node-proxy.git
+[submodule "support/forum"]
+	path = support/forum
+	url = git://github.com/guileen/node-forum.git
