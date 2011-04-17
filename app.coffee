@@ -18,11 +18,13 @@ options =
   key: fs.readFileSync __dirname + "/cert/server.key"
   cert: fs.readFileSync __dirname + "/cert/server.crt"
 
+logger = log4js.getLogger('server')
+
 https_server = https.createServer options, (req, res) ->
   try
     proxy(req, res)
   catch e
-    console.log e.stack
+    logger.error 'error to handle proxy of ' + req.headers.host + req.url, e
 
 http_server = http.createServer (req, res) ->
   if req.url is '/'
