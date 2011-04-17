@@ -3,9 +3,16 @@ multi_node = require 'multi-node'
 http = require 'http'
 https = require 'https'
 fs = require 'fs'
-
-Proxy = require('myproxy').Proxy
-proxy = new Proxy({server: 'notes.li', port: 443, useHttps: true})
+log4js = require('log4js')()
+log4js.addAppender(log4js.fileAppender('server.log'))
+ 
+proxy = require('myproxy')({
+  server: 'dev'
+  port: 443
+  useHttps: true
+  compress: false
+  logger: log4js
+})
 
 options = 
   key: fs.readFileSync __dirname + "/cert/server.key"
@@ -13,8 +20,8 @@ options =
 
 https_server = https.createServer options, (req, res) ->
   try
-    proxy.handle(req, res)
-  catch Error e
+    proxy(req, res)
+  catch e
     console.log e.stack
 
 http_server = http.createServer (req, res) ->
@@ -40,8 +47,9 @@ multi_node.listen {
     port: 443
     nodes: 4
   }, https_server
-
+###
 multi_node.listen {
     port: 80
     nodes: 1
   }, http_server
+  ###
