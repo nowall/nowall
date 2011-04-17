@@ -3,14 +3,15 @@ multi_node = require 'multi-node'
 http = require 'http'
 https = require 'https'
 fs = require 'fs'
+config = require './config'
 log4js = require('log4js')()
-log4js.addAppender(log4js.fileAppender('server.log'))
+log4js.addAppender(log4js.fileAppender(config.logfile))
  
 proxy = require('myproxy')({
-  server: 'dev'
-  port: 443
+  server: config.proxyBaseDomain
+  port: config.port || 443
   useHttps: true
-  compress: false
+  compress: config.compress || false
   logger: log4js
 })
 
