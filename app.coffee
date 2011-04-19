@@ -6,11 +6,14 @@ fs = require 'fs'
 config = require './config'
 log4js = require('log4js')()
 log4js.addAppender(log4js.fileAppender(config.logfile))
- 
+
+config.useHttps = config.useHttps && true
+config.port = config.port || if config.useHttps then 443 else 80
+
 proxy = require('myproxy')({
   server: config.proxyBaseDomain
-  port: config.port || 443
-  useHttps: true
+  port: config.port
+  useHttps: config.useHttps
   compress: config.compress || false
   logger: log4js
 })
@@ -21,11 +24,16 @@ options =
 
 logger = log4js.getLogger('server')
 
-https_server = https.createServer options, (req, res) ->
+handle = (req, res) ->
   try
     proxy(req, res)
   catch e
     logger.error 'error to handle proxy of ' + req.headers.host + req.url, e
+
+if config.useHttps
+  proxy_server = https.createServer options, handle
+else
+  proxy_server = http.createServer handle
 
 http_server = http.createServer (req, res) ->
   if req.url is '/'
@@ -47,9 +55,9 @@ http_server = http.createServer (req, res) ->
   res.end()
 
 multi_node.listen {
-    port: 443
+    port: config.port
     nodes: 4
-  }, https_server
+  }, proxy_server
 ###
 multi_node.listen {
     port: 80
