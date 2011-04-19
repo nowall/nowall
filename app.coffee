@@ -35,6 +35,9 @@ if config.useHttps
 else
   proxy_server = http.createServer handle
 
+proxy_server.addListener 'clientError', (err) ->
+  logger.error err.message, err
+
 http_server = http.createServer (req, res) ->
   if req.url is '/'
     return res.end "
