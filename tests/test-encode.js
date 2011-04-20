@@ -1,4 +1,5 @@
-encode = require('./encode');
+encode = require('../lib/encode');
+fs = require('fs');
 
 console.log(encode.encodeHost('twitter.com'));
 console.log(encode.encodeHost('http://www.twitter.com'));
@@ -21,4 +22,5 @@ console.log(encode.encodeScript('domain.xx="twitter.com";', options));
 console.log(encode.encodeScript('domain.xx="www.google.com.hk";', options));
 console.log(encode.encodeScript('domain.xx="www.goo-gle.com.hk";', options));
 console.log(encode.encodeScript('"api":"http:\\/\\/a2.twimg.com\\/a\\/1302888170\\/javascripts\\/api.bundle.js", hostname.match(/(^(www|api)\\.)?twitter\\.com$/) ' , options))
-
+console.log(encode.encodeBody('"api":"http:\\/\\/a2.twimg.com\\/a\\/1302888170\\/javascripts\\/api.bundle.js", hostname.match(/(^(www|api)\\.)?twitter\\.com$/) ' , options, true))
+console.log(encode.encodeBody(fs.readFileSync('./phoenix_plugins.bundle.js', 'utf8'), options, true, true));
