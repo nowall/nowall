@@ -1,30 +1,40 @@
-var https = require('https'),
-  fs = require('fs'),
-  Proxy = require(__dirname + '/../lib/proxy');
+var http = require('http'),
+    https = require('https'),
+    fs = require('fs'),
+    log4js = require('log4js')(),
+    useHttps = false,
+    port = 8000;
 
-var options = {
-  key: fs.readFileSync(__dirname + '/../cert/server.key'),
-  cert: fs.readFileSync(__dirname + '/../cert/server.crt')
+proxy = require('../lib/proxy')({
+    server: 'dev',
+    port: port,
+    useHttps: useHttps,
+    compress: false,
+    logger: log4js
+});
+
+
+logger = log4js.getLogger('server');
+
+handle = function(req, res) {
+  try {
+    return proxy(req, res);
+  } catch (e) {
+    return logger.error('error to handle proxy of ' + req.headers.host + req.url, e);
+  }
 };
 
-var SERVER_PORT = 8000;
+if (useHttps) {
+  proxy_server = https.createServer({
+      key: fs.readFileSync(__dirname + '../cert/server.key'),
+      cert: fs.readFileSync(__dirname + '../cert/server.crt')
+    }, handle);
+} else {
+  proxy_server = http.createServer(handle);
+}
 
-var proxy = new Proxy({server: 'dev', port: SERVER_PORT, useHttps: true, logger = require('log4js')()});
+proxy_server.addListener('clientError', function(err) {
+    return logger.error(err.message, err);
+});
 
-https.createServer(options, function(req, res) {
-
-    proxy(req, res);
-
-})
-.addListener('close', function() {
-    sys.puts('connection closed');
-})
-.addListener('error', function(err) {
-    sys.puts('server error' + sys.inspect(err));
-})
-.addListener('clientError', function(err) {
-    sys.puts(' server on clientError' + sys.inspect(err));
-})
-.listen(SERVER_PORT);
-
-
+proxy_server.listen(port);
