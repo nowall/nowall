@@ -9,7 +9,7 @@ proxy = require('../lib/proxy')({
     server: 'dev',
     port: port,
     useHttps: useHttps,
-    compress: false,
+    compress: true,
     logger: log4js
 });
 
@@ -26,8 +26,8 @@ handle = function(req, res) {
 
 if (useHttps) {
   proxy_server = https.createServer({
-      key: fs.readFileSync(__dirname + '../cert/server.key'),
-      cert: fs.readFileSync(__dirname + '../cert/server.crt')
+      key: fs.readFileSync(__dirname + '/../cert/server.key'),
+      cert: fs.readFileSync(__dirname + '/../cert/server.crt')
     }, handle);
 } else {
   proxy_server = http.createServer(handle);
