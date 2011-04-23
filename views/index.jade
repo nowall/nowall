@@ -1,0 +1,165 @@
+#main
+  h1 <font color='red'>NoWALL</font><font color='gray'>.</font>be<font color='gray'>/</font><font color='green'>here</font>
+
+  form(action='/search', method='GET')
+    p
+      input#q(name='q', autofocus, required, placeholder='No wall be here')
+    p
+      button.button.primary.big(type='submit') NoWALL
+
+#autocomplete
+  .option.focus popup
+  .option popup
+  .option popup
+  .option popup
+  .option popup
+  .option popup
+
+:stylus
+  fonts = helvetica, arial, sans-serif
+
+  boder-radius()
+    -webkit-border-radius arguments
+    -moz-border-radius arguments
+    border-radius arguments
+
+  box-shadow()
+    -webkit-box-shadow arguments
+    -moz-box-shadow arguments
+    box-shadow arguments
+
+  body
+    padding 50px
+    font 14px/1.4 fonts
+    background #333
+    color white
+  #main
+    text-align center
+  #q
+    width 24em
+    font-size 24px
+    border 1px solid #ddd
+    border-radius 0.2em
+
+  #q:focus
+    box-shadow 0 0 5px rgba(255,255,255, 0.9)
+
+  #autocomplete
+    background #888
+    position absolute
+    opacity 0.8
+    boder-radius 0 0 .3em .3em
+    visibility hidden
+
+    .option
+      padding 5px 10px
+
+      .focus
+        background #848
+
+  .button {
+      position: relative;
+      overflow: visible;
+      display: inline-block;
+      padding: 0.5em 1em;
+      border: 1px solid #d4d4d4;
+      margin: 0;
+      text-decoration: none;
+      text-shadow: 1px 1px 0 #fff;
+      font:11px/normal sans-serif;
+      color: #333;
+      white-space: nowrap;
+      cursor: pointer;
+      outline: none;
+      background-color: #ececec;
+      background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f4f4f4), to(#ececec));
+      background-image: -moz-linear-gradient(#f4f4f4, #ececec);
+      background-image: -o-linear-gradient(#f4f4f4, #ececec);
+      background-image: linear-gradient(#f4f4f4, #ececec);
+      -webkit-background-clip: padding;
+      -moz-background-clip: padding;
+      -o-background-clip: padding-box;
+      /*background-clip: padding-box;*/ /* commented out due to Opera 11.10 bug */
+      -webkit-border-radius: 0.2em;
+      -moz-border-radius: 0.2em;
+      border-radius: 0.2em;
+      /* IE hacks
+      zoom: 1;
+      *display: inline;
+       */
+  }
+
+  .button:hover,
+  .button:focus,
+  .button:active {
+      border-color: #3072b3;
+      border-bottom-color: #2a65a0;
+      text-decoration: none;
+      text-shadow: -1px -1px 0 rgba(0,0,0,0.3);
+      color: #fff;
+      background-color: #3072b3;
+      background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#599bdc), to(#3072b3));
+      background-image: -moz-linear-gradient(#599bdc, #3072b3);
+      background-image: -o-linear-gradient(#599bdc, #3072b3);
+      background-image: linear-gradient(#599bdc, #3072b3);
+  }
+
+  .button:active,
+  .button.active {
+      border-color: #2a65a0;
+      border-bottom-color: #3884CF;
+      color: #fff;
+      background-color: #3072b3;
+      background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#3072b3), to(#599bdc));
+      background-image: -moz-linear-gradient(#3072b3, #599bdc);
+      background-image: -o-linear-gradient(#3072b3, #599bdc);
+      background-image: linear-gradient(#3072b3, #599bdc);
+  }
+
+  /* overrides extra padding on button elements in Firefox */
+  .button::-moz-focus-inner {
+      padding: 0;
+      border: 0;
+  }
+
+  .button.primary {
+      font-weight: bold;
+  }
+
+  .button.big {
+      font-size: 14px;
+  }
+
+script
+  var getAbsolutOffset = function (obj) {
+      var left, top;
+      left = top = 0;
+      if (obj.offsetParent) {
+          do {
+              left += obj.offsetLeft;
+              top  += obj.offsetTop;
+          } while (obj = obj.offsetParent);
+      }
+      return {
+          x : left,
+          y : top
+      };
+  };
+
+:coffeescript
+  $= (id) ->
+    document.getElementById id
+
+  q=$('q')
+  offset = getAbsolutOffset(q)
+  autocomplete = $('autocomplete')
+  autocomplete.style.left = offset.x + 'px'
+  autocomplete.style.top = (offset.y + q.offsetHeight) + 'px'
+  autocomplete.style.width = q.offsetWidth + 'px'
+
+  q.addEventListener 'keypress', (e)->
+    # up
+    # down
+    # enter
+
+  q.addEventListener 'input', (e)->

@@ -1,69 +1,51 @@
-require.paths.unshift __dirname + "/support/"
-multi_node = require 'multi-node'
-http = require 'http'
-https = require 'https'
-fs = require 'fs'
-config = require './config'
-log4js = require('log4js')()
-log4js.addAppender(log4js.fileAppender(config.logfile))
+# Module dependencies.
 
-config.useHttps = config.useHttps && true
-config.port = config.port || if config.useHttps then 443 else 80
+express = require('express')
+config = require('./config')
+querystring = require('querystring')
 
-proxy = require('myproxy')({
-  server: config.proxyBaseDomain
-  port: config.port
-  useHttps: config.useHttps
-  compress: config.compress || false
-  logger: log4js
-})
+app = module.exports = express.createServer()
 
-options = 
-  key: fs.readFileSync __dirname + "/cert/server.key"
-  cert: fs.readFileSync __dirname + "/cert/server.crt"
+# Configuration
 
-logger = log4js.getLogger('server')
+app.configure () ->
+  app.set('views', __dirname + '/views')
+  app.set('view engine', 'jade')
+  app.use(express.bodyParser())
+  app.use(express.methodOverride())
+  app.use(app.router)
+  app.use(express.static(__dirname + '/public'))
 
-handle = (req, res) ->
-  try
-    proxy(req, res)
-  catch e
-    logger.error 'error to handle proxy of ' + req.headers.host + req.url, e
+app.configure 'development', () ->
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true })) 
 
-if config.useHttps
-  proxy_server = https.createServer options, handle
-else
-  proxy_server = http.createServer handle
+app.configure 'production', () ->
+  app.use(express.errorHandler()) 
 
-proxy_server.addListener 'clientError', (err) ->
-  logger.error err.message, err
+# Routes
 
-http_server = http.createServer (req, res) ->
-  if req.url is '/'
-    return res.end "
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset='utf-8'>
-  </head>
-  <body>
-  为保证安全，本站使用https协议，但是证书未授权，浏览器出现警告请不要惊慌。
-  <a href='https://#{req.headers.host}#{req.url}'>点此进入</a>
-  </body>
-</html>"
+app.get '/', (req, res) ->
+  res.redirect '/here'
 
-  console.log "https://#{req.headers.host}#{req.url}"
-  res.writeHead 302,
-    Location: "https://#{req.headers.host}#{req.url}"
-  res.end()
+app.get '/here', (req, res) ->
+  res.render('index', {
+      title: 'Express',
+  })
 
-multi_node.listen {
-    port: config.port
-    nodes: 4
-  }, proxy_server
-###
-multi_node.listen {
-    port: 80
-    nodes: 1
-  }, http_server
-  ###
+app.get '/search', (req, res) ->
+
+  req.on 'end', () ->
+    q = req.query.q.trim()
+    m = q.match /^(https?:\/\/)?([\w\d][\.\w\d\-]+\.\w{2,4}\w{2}?\/?\S*)$/
+    if m
+      url = (m[1] or 'http://') + m[2]
+    else
+      url = 'http://www.google.com/search?sourceid=chrome&ie=UTF-8&' + querystring.stringify({q:q})
+
+    res.redirect proxy.encodeLocation(url)
+
+# Only listen on $ node app.js
+
+if !module.parent
+  app.listen(3000)
+  console.log("Express server listening on port %d", app.address().port)
