@@ -6,6 +6,7 @@ connect = require 'connect'
 config = require './config'
 proxy_server = require './proxy'
 app = require './app'
+logger = config.logger.getLogger('server')
 
 config.useHttps = config.useHttps && true
 config.port = config.port || if config.useHttps then 443 else 80
@@ -19,6 +20,9 @@ server = module.exports = connect(
   connect.vhost(config.server, app),
   connect.vhost('*.' + config.server, proxy_server)
 )
+
+process.on 'uncaughtException', (err) ->
+  logger.error 'UncaughtException', err
 
 if not module.parent
   server.listen(config.port)

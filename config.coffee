@@ -1,7 +1,7 @@
 config = module.exports = 
   logfile: 'server.log'
-  server: 'dev'
-  port: 8443
+  server: 'nowall.dev'
+  port: 8000
   useHttps: false
 
 config.port = config.port || 443
@@ -15,3 +15,8 @@ else
 config.scheme = config.useHttps and 'https' or 'http'
 config.searchUrl = "#{config.scheme}://search.#{config.serverAndPort}"
 config.baseUrl = "#{config.scheme}://#{config.serverAndPort}"
+
+log4js = require('log4js')()
+log4js.addAppender(log4js.fileAppender(config.logfile))
+
+config.logger = log4js
