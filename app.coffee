@@ -30,7 +30,7 @@ app.get '/', (req, res) ->
 
 app.get '/here', (req, res) ->
   res.render('index', {
-      title: 'Express',
+      title: 'No WALL be here',
   })
 
 app.get '/search', (req, res) ->
