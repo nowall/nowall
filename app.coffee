@@ -37,8 +37,8 @@ app.get '/search', (req, res) ->
 
   req.on 'end', () ->
     q = req.query.q.trim()
-    m = q.match /^(https?:\/\/)?([\w\d][\.\w\d\-]+\.\w{2,4}\w{2}?\/?\S*)$/
-    if m
+    m = q.match /^(https?:\/\/)?([\w\d][\.\w\d\-]+\.(\w{2,4})(\.\w{2})?\/?\S*)$/
+    if m and (m[1] or m[3] in ['com','org','edu','net'])
       url = (m[1] or 'http://') + m[2]
     else
       url = 'http://www.google.com/search?sourceid=chrome&ie=UTF-8&' + querystring.stringify({q:q})
