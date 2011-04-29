@@ -15,10 +15,18 @@ options = {
   key: fs.readFileSync(__dirname + "/cert/server.key"),
   cert: fs.readFileSync(__dirname + "/cert/server.crt")
 };
-server = module.exports = connect(connect.logger(), connect.vhost(config.server, app), connect.vhost('api.' + config.server, api_server), connect.vhost('*.' + config.server, proxy_server));
+
+server = module.exports = connect(
+  connect.logger(),
+  connect.vhost(config.server, app),
+  connect.vhost('api.' + config.server, api_server),
+  connect.vhost('*.' + config.server, proxy_server),
+  app
+);
 process.on('uncaughtException', function(err) {
     return logger.error('UncaughtException', err);
 });
+
 if (!module.parent) {
   server.listen(config.port);
 }

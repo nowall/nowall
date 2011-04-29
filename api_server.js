@@ -1,7 +1,16 @@
-(function() {
-  var connect;
-  connect = require('connect');
-  module.exports = connect(connect.router(function(app) {
-    return app.get('/paypal/IPN', function(app) {});
-  }));
-}).call(this);
+var connect = require('connect'),
+    config = require('./config');
+
+module.exports = connect(
+  require('./connect-paypal')({
+      path: '/paypal/IPN',
+      email: 'guileen@gmail.com',
+      log4js: config.logger,
+      exists: function(txn_id, fn){
+
+      },
+      onVerified: function(data, logger) {
+
+      }
+  })
+);
