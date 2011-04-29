@@ -1,5 +1,6 @@
-fonts = helvetica, arial, sans-serif
+@import "lessframework"
 
+fonts = helvetica, arial, sans-serif
 
 boder-radius()
   -webkit-border-radius arguments
@@ -15,14 +16,18 @@ box-shadow()
 *:focus {outline: none;}
 
 body
-  padding 50px
-  font 14px/1.4 fonts
+  //padding 50px
+  //font 14px/1.4 fonts
   background #333
   color white
+  margin 0 auto
+
 #main
   text-align center
+
 #q
-  width 24em
+  width 100%
+  max-width 24em
   font-size 24px
   border 1px solid #ddd
   border-radius 0.2em
