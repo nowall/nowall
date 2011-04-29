@@ -13,3 +13,6 @@
 [submodule "support/forum"]
 	path = support/forum
 	url = git://github.com/guileen/node-forum.git
+[submodule "support/mongoskin"]
+	path = support/mongoskin
+	url = git://github.com/guileen/node-mongoskin
