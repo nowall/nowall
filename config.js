@@ -1,11 +1,5 @@
-var config, log4js; config = module.exports = {
-  logfile: 'server.log',
-  server: 'nowall.dev',
-  port: 8000,
-  useHttps: false,
-  database: 'mongodb://localhost/nowall',
-  auth_database: 'mongodb://localhost/oauth'
-};
+var config = module.exports = require('./settings'),
+    log4js = require('log4js')();
 
 config.port = config.port || 443;
 config.useHttps = config.useHttps || this.port === 443;
@@ -21,6 +15,5 @@ config.scheme = config.useHttps && 'https' || 'http';
 config.searchUrl = "" + config.scheme + "://search." + config.serverAndPort;
 config.baseUrl = "" + config.scheme + "://" + config.serverAndPort;
 
-log4js = require('log4js')();
 log4js.addAppender(log4js.fileAppender(config.logfile));
 config.logger = log4js;
