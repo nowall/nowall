@@ -1,16 +1,14 @@
-var app, config, express, querystring;
-express = require('express');
-config = require('./config');
-querystring = require('querystring');
-app = module.exports = express.createServer();
+var express = require('express'),
+    config = require('./config'),
+    querystring = require('querystring'),
+    app = module.exports = express.createServer();
+
 app.configure(function() {
     app.set('views', __dirname + '/views');
     app.set('view engine', 'jade');
     app.use(express.bodyParser());
     app.use(express.methodOverride());
-    app.use(require('nothing').middleware({
-          src: __dirname + '/public'
-    }));
+    //app.use(require('nothing').middleware({ src: __dirname + '/public' }));
     app.use(require('stylus').middleware({
           src: __dirname + '/public'
     }));
