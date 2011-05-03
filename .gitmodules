@@ -19,3 +19,6 @@
 [submodule "support/sendmail"]
 	path = support/sendmail
 	url = git://github.com/guileen/node-sendmail.git
+[submodule "support/jst"]
+	path = support/jst
+	url = git://github.com/guileen/node-jst.git
