@@ -16,3 +16,6 @@
 [submodule "support/mongoskin"]
 	path = support/mongoskin
 	url = git://github.com/guileen/node-mongoskin
+[submodule "support/sendmail"]
+	path = support/sendmail
+	url = git://github.com/guileen/node-sendmail.git
