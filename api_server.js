@@ -57,29 +57,41 @@ function updateUserDonation(data, logger) {
   });
 }
 
-module.exports = connect(
-  require('./connect-paypal')({
-      path: '/paypal/IPN',
-      email: config.receiver_email,
-      log4js: config.logger,
-      exists: function(txn_id, fn) {
-        db.payment.findOne({txn_id: txn_id}, {txn_id: 1}, function(err, reply) {
-            fn(err, !!reply);
-        });
-      },
-      onVerified: function(data, logger) {
-        logger.info('verified payment email:' + data.email + ' amount:' + data.payment_gross);
-        db.payment.insert(data, function(err, reply) {
-            if (err) {
-              logger.error('error to insert payment data', err);
-            } else {
-              // must update user information after successfully insert payment information
-              // the notification message will be send again.
-              updateUserDonation(data, logger);
-            }
-        });
-      }
-  })
+var paypal = require('./lib/paypal')({
+    path: '/paypal/IPN',
+    email: config.receiver_email,
+    log4js: config.logger,
+    exists: function(txn_id, fn) {
+      db.payment.findOne({txn_id: txn_id}, {txn_id: 1}, function(err, reply) {
+          fn(err, !!reply);
+      });
+    }
+});
+
+module.exports = connect.createServer(
+  connect.router(function(app){
+      //begin app
+      app.post('/paypal/IPN', function(req, res){
+          paypal.verify(req, function(data, logger) {
+              logger.info('verified payment email:' + data.email + ' amount:' + data.payment_gross);
+              db.payment.insert(data, function(err, reply) {
+                  if (err) {
+                    logger.error('error to insert payment data', err);
+                  } else {
+                    // must update user information after successfully insert payment information
+                    // the notification message will be send again.
+                    updateUserDonation(data, logger);
+                  }
+              });
+          });
+      });
+
+      //end app
+  }),
+
+  function(req, res, next){
+    res.end('404 Not found. This is API server', 404);
+  }
 );
 
 if (!module.parent) {
