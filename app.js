@@ -27,6 +27,10 @@ app.configure('production', function() {
     return app.use(express.errorHandler());
 });
 
+app.helpers({
+    config : config
+});
+
 app.get('/', function(req, res) {
     return res.redirect('/here');
 });
@@ -37,16 +41,18 @@ app.get('/here', function(req, res) {
     });
 });
 
-app.all('/donation/success', function(req, res) {
+app.post('/donation/success', function(req, res) {
     console.dir(req);
     return res.render('donation_success', {
-        title: 'Thank you'
-    });
+        title: 'Thank you',
+        data: req.body
+      });
 });
 
-app.all('/donation/cancel', function(req, res) {
+app.post('/donation/cancel', function(req, res) {
     return res.render('donation_cancel', {
-        title: 'Thank you'
+        title: 'Thank you',
+        data: req.body
     });
 });
 
