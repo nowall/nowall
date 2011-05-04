@@ -7,6 +7,9 @@ module.exports = {
   database: 'mongodb://localhost/nowall',
   auth_database: 'mongodb://localhost/oauth',
 
+  // paypal
+  receiver_email: 'seller_1303880284_biz@gmail.com',
 
-  sender: 'test@test.com'
+  // sendmail
+  sender: 'test-noreply@nowall.be'
 };

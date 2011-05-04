@@ -60,7 +60,7 @@ function updateUserDonation(data, logger) {
 module.exports = connect(
   require('./connect-paypal')({
       path: '/paypal/IPN',
-      email: 'guileen@gmail.com',
+      email: config.receiver_email,
       log4js: config.logger,
       exists: function(txn_id, fn) {
         db.payment.findOne({txn_id: txn_id}, {txn_id: 1}, function(err, reply) {
@@ -68,7 +68,7 @@ module.exports = connect(
         });
       },
       onVerified: function(data, logger) {
-        logger.info('verified payment email:' + data.email + ' fee:' + data.payment_fee);
+        logger.info('verified payment email:' + data.email + ' amount:' + data.payment_gross);
         db.payment.insert(data, function(err, reply) {
             if (err) {
               logger.error('error to insert payment data', err);
