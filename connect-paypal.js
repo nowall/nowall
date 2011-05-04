@@ -64,7 +64,7 @@ module.exports = function(options) {
     if (data.payment_status !== 'Completed') {
       return logger.info('InCompleted, Status is ' + data.payment_status);
     }
-    if (!data.payment_fee) {
+    if (!data.payment_gross) {
       return logger.info('Payment fee is 0');
     }
 

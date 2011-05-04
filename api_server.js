@@ -31,7 +31,7 @@ function updateUserDonation(data, logger) {
 
   var email = data.payer_email,
       screen_name = data.first_name + ' ' + data.last_name,
-      fee = parseInt(data.payment_fee);
+      gross = parseInt(data.payment_gross);
 
   db.user.findOne({email: email}, {email: email}, function(err, reply) {
       if (!reply) {
@@ -46,7 +46,7 @@ function updateUserDonation(data, logger) {
             sendVerifiMail(user, logger);
         });
       }
-      db.user.update({email: email}, {$inc: {donation: fee}}, function(err, reply) {
+      db.user.update({email: email}, {$inc: {donation: gross}}, function(err, reply) {
           if (err) {
             logger.error(err.message, err);
           }
