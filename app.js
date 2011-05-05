@@ -42,7 +42,6 @@ app.get('/here', function(req, res) {
 });
 
 app.post('/donation/success', function(req, res) {
-    console.dir(req);
     return res.render('donation_success', {
         title: 'Thank you',
         data: req.body

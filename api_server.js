@@ -61,6 +61,7 @@ var paypal = require('./lib/paypal')({
     path: '/paypal/IPN',
     email: config.receiver_email,
     log4js: config.logger,
+    sandbox: config.sandbox,
     exists: function(txn_id, fn) {
       db.payment.findOne({txn_id: txn_id}, {txn_id: 1}, function(err, reply) {
           fn(err, !!reply);
@@ -72,7 +73,8 @@ module.exports = connect.createServer(
   connect.router(function(app){
       //begin app
       app.post('/paypal/IPN', function(req, res){
-          paypal.verify(req, function(data, logger) {
+          paypal.verify(req, function(err, data, logger) {
+              if(err) return logger.error('error to verify', err);
               logger.info('verified payment email:' + data.email + ' amount:' + data.payment_gross);
               db.payment.insert(data, function(err, reply) {
                   if (err) {
@@ -98,9 +100,15 @@ if (!module.parent) {
   var data = {
     txn_id: 'testtest',
     payer_email: '21863539@qq.com',
+    receiver_email: config.receiver_email,
     first_name: '桂',
     last_name: '林',
-    payment_fee: '20'
+    payment_fee: '1.52',
+    payment_gross: '20.00',
+    payment_status: 'Completed'
   }
-  updateUserDonation(data, require('log4js')().getLogger(data.txn_id));
+  paypal.verifyBody(data, {}, function(err, data, logger){
+      if(err) return logger.error('error to verifyBody', err);
+      console.dir(data);
+  });
 }
