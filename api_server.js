@@ -4,7 +4,8 @@ var connect = require('connect'),
     config = require('./config'),
     db = require('./database'),
     jst = require('jst'),
-    sendmail = require('sendmail').sendmail;
+    sendmail = require('sendmail').sendmail,
+    logger = config.logger.getLogger('api_server');
 
 function sendVerifiMail(user, logger) {
   jst.renderFile('./views/mails/donation.html',
