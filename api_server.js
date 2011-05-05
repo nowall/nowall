@@ -100,7 +100,7 @@ module.exports = connect.createServer(
 if (!module.parent) {
   var data = {
     txn_id: 'testtest',
-    payer_email: '21863539@qq.com',
+    payer_email: 'guileen@gmail.com',
     receiver_email: config.receiver_email,
     first_name: '桂',
     last_name: '林',
@@ -113,6 +113,14 @@ if (!module.parent) {
       console.dir(data);
   });
 
+  updateUserDonation(data, logger);
 
+  sendVerifiMail({
+      email: data.payer_email,
+      first_name: data.first_name,
+      last_name: data.last_name,
+      screen_name: data.first_name + ' ' + data.last_name,
+      verify_code: Math.floor(Math.random() * 0xffffffff).toString(32)
+    }, logger);
 
 }
