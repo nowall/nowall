@@ -75,7 +75,7 @@ module.exports = connect.createServer(
       app.post('/paypal/IPN', function(req, res){
           paypal.verify(req, function(err, data, logger) {
               if(err) return logger.error('error to verify', err);
-              logger.info('verified payment email:' + data.email + ' amount:' + data.payment_gross);
+              logger.info('verified payment of ' + data.payer_email + ' amount:' + data.payment_gross);
               db.payment.insert(data, function(err, reply) {
                   if (err) {
                     logger.error('error to insert payment data', err);
@@ -111,4 +111,7 @@ if (!module.parent) {
       if(err) return logger.error('error to verifyBody', err);
       console.dir(data);
   });
+
+
+
 }
