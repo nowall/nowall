@@ -3,6 +3,14 @@ module.exports = {
   server: 'nowall.dev',
   port: 8000,
   useHttps: false,
+
   database: 'mongodb://localhost/nowall',
-  auth_database: 'mongodb://localhost/oauth'
+  auth_database: 'mongodb://localhost/oauth',
+
+  // paypal
+  receiver_email: 'seller_1303880284_biz@gmail.com',
+  sandbox: true,
+
+  // sendmail
+  sender: 'test-noreply@nowall.be'
 };

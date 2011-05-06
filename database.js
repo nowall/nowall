@@ -1,22 +1,17 @@
 var mongo = require('mongoskin'),
-    config = require('./config'),
-    auth_database = mongo.db(config.auth_database),
-    database = mongo.db(config.database),
+    config = require('./config');
 
-auth_database.bind('user');
-auth_database.bind('payment');
-
-database.bind('user', auth_database.user);
-database.bind('payment', auth_database.user);
-
-module.exports = mongo.proxy(function(name){
+var db = module.exports = mongo.router(function(name){
     switch(name){
     case 'user':
     case 'payment':
-      return auth_database
+    case 'message':
+      return mongo.db(config.auth_database);
     default:
-      return database
+      return mongo.db(config.database);
     }
-  });
+});
 
-module.exports = mongo.proxy(auth_database, database);
+db.bind('user');
+db.bind('payment');
+db.bind('message');

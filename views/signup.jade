@@ -1,0 +1,14 @@
+.auto.max_2
+  form(method='POST')
+    fieldset.s_column
+      legend 注册
+      p
+        label Email
+        input(type='email', name='email', value=user.email, disabled)
+        input(type='hidden', name='email', value=user.email)
+        input(type='hidden', name='verify_code', value=user.verify_code)
+      p
+        label 密码
+        input(type='password', name='password')
+      p.align-center
+        button.button.primary(type='submit') 注册

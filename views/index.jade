@@ -7,6 +7,9 @@
     p
       button.button.primary.big(type='submit') NoWALL
 
+  .donation
+    !=partial('donation')
+
 #autocomplete
   .option.focus popup
   .option popup
@@ -31,20 +34,22 @@ script
       };
   };
 
-:coffeescript
-  $= (id) ->
-    document.getElementById id
+  var $= function(id) {
+    return document.getElementById(id);
+  }
 
-  q=$('q')
-  offset = getAbsolutOffset(q)
+  var q=$('q'),
+    offset = getAbsolutOffset(q);
   autocomplete = $('autocomplete')
   autocomplete.style.left = offset.x + 'px'
   autocomplete.style.top = (offset.y + q.offsetHeight) + 'px'
   autocomplete.style.width = q.offsetWidth + 'px'
 
-  q.addEventListener 'keypress', (e)->
-    # up
-    # down
-    # enter
+  q.addEventListener('keypress', function(e) {
+    // up
+    // down
+    // enter
+  });
 
-  q.addEventListener 'input', (e)->
+  q.addEventListener('input', function(e) {
+  });

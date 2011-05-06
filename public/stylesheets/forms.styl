@@ -1,0 +1,71 @@
+form
+  fieldset 
+
+    -webkit-border-radius 3px
+    -moz-border-radius 3px
+    border-radius 3px
+    padding 10px
+    border 1px solid #eee
+
+    legend 
+      font-size 1.4em
+      padding 0 5px
+
+  input[type=text], input[type=email], input[type=url], input[type=password], input[type=number], textarea 
+    -moz-border-radius 3px
+    -webkit-border-radius 3px
+    border-radius 3px
+    height 20px
+    margin-bottom 5px
+    border 1px solid #ccc
+    padding 4px 0 1px 5px
+    
+  .textarea textarea 
+    -moz-border-radius 3px
+    -webkit-border-radius 3px
+    border-radius 3px
+    margin-bottom 5px
+    min-height 50px
+    border 1px solid #ccc
+    padding 4px 0 1px 5px
+    width 100%
+
+  .textarea 
+    height auto
+
+  label 
+    display block
+    height 20px
+    font-size 1.2em
+
+  /* special form styling */
+  .d_column p
+    height 24px
+    clear both
+    margin-bottom 6px
+    padding 5px 0px
+
+    label 
+      float left
+      width auto
+
+    input 
+      width 52%
+      float right
+
+    input.invalid 
+      border-bottom 1px solid #f00
+
+  /* single column form styling */
+  .s_column p
+    height auto
+    margin-bottom 3px
+    padding 0px
+
+    label 
+      float none
+      width 100%
+
+    input 
+      width 98%
+      float none

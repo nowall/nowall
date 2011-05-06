@@ -1,4 +1,9 @@
+@import "reset"
 @import "lessframework"
+@import "1140"
+@import "buttons"
+@import "forms"
+@import "messages"
 
 fonts = helvetica, arial, sans-serif
 
@@ -13,16 +18,84 @@ box-shadow()
   box-shadow arguments
 
 // reset
-*:focus {outline: none;}
+*:focus
+  outline none
+
+p
+  margin 5px
 
 body
-  //padding 50px
   //font 14px/1.4 fonts
   background #333
   color white
   margin 0 auto
+// general
+.auto
+  margin 0 auto
 
+.max_1
+  max-width 120px
+.max_2
+  max-width 240px
+.max_3
+  max-width 360px
+.max_4
+  max-width 480px
+.max_5
+  max-width 600px
+.max_6
+  max-width 720px
+.max_7
+  max-width 840px
+.max_8
+  max-width 960px
+
+/* ** ** Common Addative Classes ** ** */
+.left, .float_left
+  float left
+.right, .float_right
+  float right
+.clear
+  clear both
+  display block
+  overflow hidden
+  visibility hidden
+  height 0px
+
+.clear-left, .clear_left
+  clear left
+
+.clear-right, .clear_right
+  clear right
+
+.hide
+  display none
+.block
+  display block !important
+.inline
+  display inline !important
+
+.align_right
+.align-right
+  text-align right
+.align_left
+.align-left
+  text-align left
+.align_center
+.align-center
+  text-align center
+.align_justify
+.align-justify
+  text-align justify
+
+.bold
+  font-weight 600
+.italic
+  font-style italic
+
+// elements
 #main
+  margin-top 20px
   text-align center
 
 #q
@@ -48,75 +121,12 @@ body
     .focus
       background #848
 
-.button {
-    position: relative;
-    overflow: visible;
-    display: inline-block;
-    padding: 0.5em 1em;
-    border: 1px solid #d4d4d4;
-    margin: 0;
-    text-decoration: none;
-    text-shadow: 1px 1px 0 #fff;
-    font:11px/normal sans-serif;
-    color: #333;
-    white-space: nowrap;
-    cursor: pointer;
-    outline: none;
-    background-color: #ececec;
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f4f4f4), to(#ececec));
-    background-image: -moz-linear-gradient(#f4f4f4, #ececec);
-    background-image: -o-linear-gradient(#f4f4f4, #ececec);
-    background-image: linear-gradient(#f4f4f4, #ececec);
-    -webkit-background-clip: padding;
-    -moz-background-clip: padding;
-    -o-background-clip: padding-box;
-    /*background-clip: padding-box;*/ /* commented out due to Opera 11.10 bug */
-    -webkit-border-radius: 0.2em;
-    -moz-border-radius: 0.2em;
-    border-radius: 0.2em;
-    /* IE hacks
-    zoom: 1;
-    *display: inline;
-     */
-}
+.donation
+  display inline-block
+  margin-top 50px
+  padding 10px
+  border 1px solid #888
+  border-radius 0.3em
 
-.button:hover,
-.button:focus,
-.button:active {
-    border-color: #3072b3;
-    border-bottom-color: #2a65a0;
-    text-decoration: none;
-    text-shadow: -1px -1px 0 rgba(0,0,0,0.3);
-    color: #fff;
-    background-color: #3072b3;
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#599bdc), to(#3072b3));
-    background-image: -moz-linear-gradient(#599bdc, #3072b3);
-    background-image: -o-linear-gradient(#599bdc, #3072b3);
-    background-image: linear-gradient(#599bdc, #3072b3);
-}
-
-.button:active,
-.button.active {
-    border-color: #2a65a0;
-    border-bottom-color: #3884CF;
-    color: #fff;
-    background-color: #3072b3;
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#3072b3), to(#599bdc));
-    background-image: -moz-linear-gradient(#3072b3, #599bdc);
-    background-image: -o-linear-gradient(#3072b3, #599bdc);
-    background-image: linear-gradient(#3072b3, #599bdc);
-}
-
-/* overrides extra padding on button elements in Firefox */
-.button::-moz-focus-inner {
-    padding: 0;
-    border: 0;
-}
-
-.button.primary {
-    font-weight: bold;
-}
-
-.button.big {
-    font-size: 14px;
-}
+  label
+    display inline
