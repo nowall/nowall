@@ -1,16 +1,16 @@
 module.exports = {
-  logfile: 'server.log',
-  server: 'nowall.dev',
-  port: 8000,
+  logfile: '/var/log/node-server.log',
+  server: 'nowall.be',
+  port: 80,
   useHttps: false,
 
   database: 'mongodb://localhost/nowall',
   auth_database: 'mongodb://localhost/oauth',
 
   // paypal
-  receiver_email: 'seller_1303880284_biz@gmail.com',
-  sandbox: true,
+  receiver_email: 'guileen@gmail.com',
+  sandbox: false,
 
   // sendmail
-  sender: 'test-noreply@nowall.be'
+  sender: 'noreply@nowall.be'
 };
