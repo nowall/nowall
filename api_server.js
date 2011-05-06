@@ -7,8 +7,8 @@ var connect = require('connect'),
     sendmail = require('sendmail').sendmail,
     logger = config.logger.getLogger('api_server');
 
-function sendVerifiMail(user, logger) {
-  jst.renderFile('./views/mails/donation.html',
+function sendUserMail(user, subject, template, logger) {
+  jst.renderFile('./views/mails/' + template,
     { user: user,
       config: config
     }, function(err, result) {
@@ -28,33 +28,44 @@ function sendVerifiMail(user, logger) {
   });
 }
 
+function sendVerifyMail(user, logger) {
+  sendUserMail(user, 'Thank you for support nowall', 'donation.html', logger);
+}
+
+function sendThanksMail(user, logger) {
+  sendUserMail(user, 'Thank you for support nowall', 'thanks.html', logger);
+}
+
 function updateUserDonation(data, logger) {
 
   var email = data.payer_email,
       screen_name = data.first_name + ' ' + data.last_name,
       gross = parseInt(data.payment_gross);
 
-  db.user.findOne({email: email}, {email: email}, function(err, reply) {
+  db.user.findOne({email: email}, function(err, reply) {
       if (!reply) {
         var user = {
           email: email,
           first_name: data.first_name,
           last_name: data.last_name,
           screen_name: data.first_name + ' ' + data.last_name,
+          donation: gross,
           verify_code: Math.floor(Math.random() * 0xffffffff).toString(32)
         };
         db.user.insert( user , function(err, reply) {
-            sendVerifiMail(user, logger);
+            sendVerifyMail(user, logger);
+        });
+      } else {
+        db.user.findAndModify({email: email}, [], {$inc: {donation: gross}}, function(err, user) {
+            if (err) {
+              logger.error(err.message, err);
+            }
+            else {
+              sendThanksMail(user, logger);
+              logger.info('update donation of ' + email);
+            }
         });
       }
-      db.user.update({email: email}, {$inc: {donation: gross}}, function(err, reply) {
-          if (err) {
-            logger.error(err.message, err);
-          }
-          else {
-            logger.info('update donation of ' + email);
-          }
-      });
   });
 }
 
@@ -115,12 +126,21 @@ if (!module.parent) {
 
   updateUserDonation(data, logger);
 
-  sendVerifiMail({
+  sendVerifyMail({
       email: data.payer_email,
       first_name: data.first_name,
       last_name: data.last_name,
       screen_name: data.first_name + ' ' + data.last_name,
       verify_code: Math.floor(Math.random() * 0xffffffff).toString(32)
     }, logger);
+
+  sendThanksMail({
+      email: data.payer_email,
+      first_name: data.first_name,
+      last_name: data.last_name,
+      screen_name: data.first_name + ' ' + data.last_name,
+      verify_code: Math.floor(Math.random() * 0xffffffff).toString(32)
+    }, logger);
+
 
 }
