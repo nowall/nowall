@@ -9,6 +9,7 @@ module.exports = {
 
   // paypal
   receiver_email: 'guileen@gmail.com',
+  business: 'WLUP24S9ZJYCL',
   sandbox: false,
 
   // sendmail
