@@ -1,5 +1,8 @@
+@import "reset"
 @import "lessframework"
+@import "1140"
 @import "buttons"
+@import "forms"
 
 fonts = helvetica, arial, sans-serif
 
@@ -14,7 +17,8 @@ box-shadow()
   box-shadow arguments
 
 // reset
-*:focus {outline: none;}
+*:focus
+  outline none
 
 p
   margin 5px
@@ -25,7 +29,71 @@ body
   background #333
   color white
   margin 0 auto
+// general
+.auto
+  margin 0 auto
 
+.max_1
+  max-width 120px
+.max_2
+  max-width 240px
+.max_3
+  max-width 360px
+.max_4
+  max-width 480px
+.max_5
+  max-width 600px
+.max_6
+  max-width 720px
+.max_7
+  max-width 840px
+.max_8
+  max-width 960px
+
+/* ** ** Common Addative Classes ** ** */
+.left, .float_left
+  float left
+.right, .float_right
+  float right
+.clear
+  clear both
+  display block
+  overflow hidden
+  visibility hidden
+  height 0px
+
+.clear-left, .clear_left
+  clear left
+
+.clear-right, .clear_right
+  clear right
+
+.hide
+  display none
+.block
+  display block !important
+.inline
+  display inline !important
+
+.align_right
+.align-right
+  text-align right
+.align_left
+.align-left
+  text-align left
+.align_center
+.align-center
+  text-align center
+.align_justify
+.align-justify
+  text-align justify
+
+.bold
+  font-weight 600
+.italic
+  font-style italic
+
+// elements
 #main
   text-align center
 
@@ -58,3 +126,6 @@ body
   padding 10px
   border 1px solid #888
   border-radius 0.3em
+
+  label
+    display inline
