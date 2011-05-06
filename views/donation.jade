@@ -1,6 +1,6 @@
 <form target="paypal" action="https://www#{config.sandbox ? '.sandbox' : ''}.paypal.com/cgi-bin/webscr" method="post">
 <input type="hidden" name="cmd" value="_donations">
-<input type="hidden" name="business" value="DELZ9AZ995E9C">
+<input type="hidden" name="business" value="#{config.business}">
 <input type="hidden" name="item_name" value="Donation for nowall.be/here">
 <input type="hidden" name="address_override" value="nowall.be/here">
 <input type="hidden" name="item_number" value="nowallbehere">
