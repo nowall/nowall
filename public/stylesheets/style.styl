@@ -3,6 +3,7 @@
 @import "1140"
 @import "buttons"
 @import "forms"
+@import "messages"
 
 fonts = helvetica, arial, sans-serif
 
@@ -24,7 +25,6 @@ p
   margin 5px
 
 body
-  //padding 50px
   //font 14px/1.4 fonts
   background #333
   color white
@@ -93,8 +93,30 @@ body
 .italic
   font-style italic
 
+//messages for express-messages
+#messages
+  text-align center
+  font-size 18px
+  text-shadow 1px 1px 1px #888
+  ul
+    li
+      display block
+      padding 5px
+      border 1px solid #888
+      margin-top -1px
+
+  .error
+    background #c60
+    li
+      border 1px solid #a30
+  .info
+    //background green
+    li
+      border 1px solid #666
+
 // elements
 #main
+  margin-top 20px
   text-align center
 
 #q

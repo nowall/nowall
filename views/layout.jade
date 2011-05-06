@@ -1,10 +1,12 @@
 !!! 5
 html
   head
-    title= title
+    title=(locals.title || 'NoWALL')
     link(rel='stylesheet', media='screen', href='/stylesheets/style.css')
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  body!= body
+  body
+    != messages()
+    != body
     script
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-22925186-1']);
