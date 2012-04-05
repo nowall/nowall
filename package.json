@@ -1,0 +1,21 @@
+{
+  "author": "Gui Lin",
+  "name": "nowall",
+  "description": "No wall be here",
+  "version": "0.2.0",
+  "homepage": "http://nowall.be/here",
+  "repository": {
+    "type": "git",
+    "url": "git@notes.li:server.git"
+  },
+  "engines": {
+    "node": ">=0.6.0"
+  },
+  "dependencies": {
+    "express": ">=0.2.0"
+  , "jade" : ">=0.1.0"
+  , "stylus" : ">=0.0.1"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {}
+}
