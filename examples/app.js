@@ -1,9 +1,9 @@
 var http = require('http'),
     https = require('https'),
     fs = require('fs'),
-    log4js = require('log4js')(),
+    log4js = require('log4js'),
     useHttps = false,
-    port = 8000;
+    port = 3000;
 
 proxy = require('../lib/proxy')({
     server: 'dev',
