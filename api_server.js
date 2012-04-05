@@ -1,5 +1,3 @@
-require.paths.unshift(__dirname + "/support/");
-
 var connect = require('connect'),
     config = require('./config'),
     db = require('./database'),

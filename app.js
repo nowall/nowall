@@ -4,7 +4,7 @@ var express = require('express'),
     db = require('./database'),
     app = module.exports = express.createServer();
 
-var RedisStore = require('connect-redis');
+var RedisStore = require('connect-redis')(express);
 app.configure(function() {
     app.set('views', __dirname + '/views');
     app.set('view engine', 'jade');

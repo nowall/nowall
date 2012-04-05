@@ -1,12 +1,10 @@
-require.paths.unshift(__dirname + "/support/");
-
 var connect = require('connect'),
     config = require('./config');
 
 config.useHttps = config.useHttps && true;
 config.port = config.port || (config.useHttps ? 443 : 80);
 
-var proxy = global.proxy = require('myproxy')({
+var proxy = global.proxy = require('nowall-proxy')({
     server: config.server,
     port: config.port,
     useHttps: config.useHttps,

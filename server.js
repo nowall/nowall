@@ -1,5 +1,3 @@
-require.paths.unshift(__dirname + "/support/");
-
 var http = require('http'),
     https = require('https'),
     fs = require('fs'),

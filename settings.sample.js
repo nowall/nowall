@@ -1,7 +1,7 @@
 module.exports = {
-  logfile: '/var/log/node-server.log',
-  server: 'nowall.be',
-  port: 80,
+  logfile: './node-server.log',
+  server: 'dev',//'nowall.be',
+  port: 3000,
   useHttps: false,
 
   database: 'mongodb://localhost/nowall',

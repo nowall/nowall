@@ -1,5 +1,5 @@
 var config = module.exports = require('./settings'),
-    log4js = require('log4js')();
+    log4js = require('log4js');
 
 config.port = config.port || 443;
 config.useHttps = config.useHttps || this.port === 443;
