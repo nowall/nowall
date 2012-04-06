@@ -69,7 +69,7 @@ function updateUserDonation(data, logger) {
 
 var paypal = require('./lib/paypal')({
     path: '/paypal/IPN',
-    email: config.receiver_email,
+    email: 'guileen@gmail.com', // receiver_email
     log4js: config.logger,
     sandbox: config.sandbox,
     exists: function(txn_id, fn) {
@@ -79,27 +79,27 @@ var paypal = require('./lib/paypal')({
     }
 });
 
-module.exports = connect.createServer(
-  connect.router(function(app){
-      //begin app
-      app.post('/paypal/IPN', function(req, res){
-          paypal.verify(req, function(err, data, logger) {
-              if(err) return logger.error('error to verify', err);
-              logger.info('verified payment of ' + data.payer_email + ' amount:' + data.payment_gross);
-              db.payment.insert(data, function(err, reply) {
-                  if (err) {
-                    logger.error('error to insert payment data', err);
-                  } else {
-                    // must update user information after successfully insert payment information
-                    // the notification message will be send again.
-                    updateUserDonation(data, logger);
-                  }
-              });
-          });
-      });
 
-      //end app
-  }),
+module.exports = connect(
+  function(req, res, next) {
+    if(req.method != 'POST') return next();
+    var url = require('url').parse(req.url);
+    if(url.pathname != '/paypal/IPN') return next();
+    paypal.verify(req, function(err, data, logger) {
+        if(err) return logger.error('error to verify', err);
+        logger.info('verified payment of ' + data.payer_email + ' amount:' + data.payment_gross);
+        db.payment.insert(data, function(err, reply) {
+            if (err) {
+              logger.error('error to insert payment data', err);
+            } else {
+              // must update user information after successfully insert payment information
+              // the notification message will be send again.
+              updateUserDonation(data, logger);
+            }
+        });
+    });
+
+  },
 
   function(req, res, next){
     res.end('404 Not found. This is API server', 404);
