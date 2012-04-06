@@ -12,9 +12,15 @@
     "node": ">=0.6.0"
   },
   "dependencies": {
-    "express": ">=0.2.0"
-  , "jade" : ">=0.1.0"
-  , "stylus" : ">=0.0.1"
+    "express": ">=0.2.5"
+  , "jade": ">=0.1.0"
+  , "stylus": ">=0.0.1"
+  , "connect": ">=0.0.1"
+  , "hiredis":">=0.0.1"
+  , "redis":">=0.0.1"
+  , "connect-redis": ">=0.0.1"
+  , "mongoskin":">=0.3.4"
+  , "log4js":">=0.2.0"
   },
   "devDependencies": {},
   "optionalDependencies": {}
