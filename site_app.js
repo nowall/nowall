@@ -37,6 +37,7 @@ app.dynamicHelpers({
 
 app.helpers({
     config : config
+  , dev : app.settings.env == 'development'
 });
 
 app.get('/', function(req, res) {
