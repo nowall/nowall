@@ -12,7 +12,7 @@ var proxy = global.proxy = require('nowall-proxy')({
     logger: config.logger
 });
 
-module.exports = connect(function(req, res) {
+module.exports = connect().use(function(req, res) {
     try {
       return proxy(req, res);
     } catch (e) {
