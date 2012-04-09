@@ -6,7 +6,7 @@
   "homepage": "http://nowall.be/here",
   "repository": {
     "type": "git",
-    "url": "git@notes.li:server.git"
+    "url": "git://github.com/guileen/nowall.git"
   },
   "engines": {
     "node": ">=0.6.0"
@@ -25,6 +25,10 @@
   , "sendmail":">=0.0.1"
   , "express-messages":">=0.0.1"
   },
-  "devDependencies": {},
-  "optionalDependencies": {}
+  "devDependencies": {
+    "mocha": ">=0.0.1"
+  , "should": ">=0.0.1"
+  },
+  "optionalDependencies": {
+  }
 }
