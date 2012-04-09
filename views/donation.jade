@@ -13,11 +13,11 @@ form(target="paypal", action="https://www#{dev ? '.sandbox' : ''}.paypal.com/cgi
   <input type="hidden" name="cn" value="Say something to nowall.be">
   <input type="hidden" name="no_shipping" value="1">
   <input type="hidden" name="rm" value="1">
-  input(type='hidden', name='cbt', value='返回Nowall.be')
-  input(type="hidden", name="image_url", value='http://' + config.serverAndPort + '/images/nowall.small.png')
-  input(type="hidden", name="return", value="http://" + config.serverAndPort + '/donation/success')
-  input(type="hidden", name="cancel_return", value="http://" + config.serverAndPort + '/donation/cancel')
-  input(type="hidden", name="notify_url", value="http://api." + config.serverAndPort + '/paypal/IPN')
+  input(type='hidden', name='cbt', value='Return to Nowall.be')
+  input(type="hidden", name="image_url", value='http://#{config.serverAndPort}/images/nowall.small.png')
+  input(type="hidden", name="return", value="http://#{config.serverAndPort}/donation/success")
+  input(type="hidden", name="cancel_return", value="http://#{config.serverAndPort}/donation/cancel")
+  input(type="hidden", name="notify_url", value="http://api.#{config.serverAndPort}/paypal/IPN")
   p
     label
       input(type='radio', name='amount', value='1', onclick='onRadioClick(this)')
@@ -37,10 +37,12 @@ form(target="paypal", action="https://www#{dev ? '.sandbox' : ''}.paypal.com/cgi
     label
       input(type='radio', name='amount', value='100', onclick='onRadioClick(this)')
       $100
-  button#donation.button.small(type="submit") 捐赠 $25
+  button#donation.button.small(type="submit") Paypal捐赠 $25
+  &nbsp;
+  a.button(href='https://me.alipay.com/guileen') 支付宝捐赠
 </form>
 
 script
   function onRadioClick(el){
-    document.getElementById('donation').innerHTML = '捐赠 $' + el.value;
+    document.getElementById('donation').innerHTML = 'Paypal捐赠 $' + el.value;
   }
