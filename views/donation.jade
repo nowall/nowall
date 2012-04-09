@@ -20,29 +20,24 @@ form(target="paypal", action="https://www#{dev ? '.sandbox' : ''}.paypal.com/cgi
   input(type="hidden", name="notify_url", value="http://api.#{config.serverAndPort}/paypal/IPN")
   p
     label
-      input(type='radio', name='amount', value='1', onclick='onRadioClick(this)')
+      input(type='radio', name='amount', value='1')
       $1
     label
-      input(type='radio', name='amount', value='5', onclick='onRadioClick(this)')
+      input(type='radio', name='amount', value='5')
       $5
     label
-      input(type='radio', name='amount', value='10', onclick='onRadioClick(this)')
+      input(type='radio', name='amount', value='10', checked)
       $10
     label
-      input(type='radio', name='amount', value='25', checked, onclick='onRadioClick(this)')
+      input(type='radio', name='amount', value='25')
       $25
     label
-      input(type='radio', name='amount', value='50', onclick='onRadioClick(this)')
+      input(type='radio', name='amount', value='50')
       $50
     label
-      input(type='radio', name='amount', value='100', onclick='onRadioClick(this)')
+      input(type='radio', name='amount', value='100')
       $100
-  button#donation.button.small(type="submit") Paypal捐赠 $25
+  button#donation.button.small(type="submit") Paypal捐赠
   &nbsp;
   a.button(href='https://me.alipay.com/guileen') 支付宝捐赠
 </form>
-
-script
-  function onRadioClick(el){
-    document.getElementById('donation').innerHTML = 'Paypal捐赠 $' + el.value;
-  }
