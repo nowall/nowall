@@ -13,8 +13,8 @@ var httpsPort = config.httpsPort
 var options = {}
 
 if(httpsPort) {
-  options.key= fs.readFileSync(__dirname + "/cert/server.key"),
-  options.cert= fs.readFileSync(__dirname + "/cert/server.crt")
+  options.key= fs.readFileSync(__dirname + "/cert/ssl.key"),
+  options.cert= fs.readFileSync(__dirname + "/cert/ssl.crt")
 }
 
 var proxy = global.proxy =  require('./lib/proxy')({
