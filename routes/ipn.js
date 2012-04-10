@@ -1,12 +1,12 @@
 var connect = require('connect'),
-    config = require('./config'),
-    db = require('./database'),
+    config = require('../config'),
+    db = require('../lib/store'),
     jst = require('jst'),
     sendmail = require('sendmail').sendmail,
-    logger = config.logger.getLogger('api_server');
+    logger = config.logger.getLogger('ipn');
 
 function sendUserMail(user, subject, template, logger) {
-  jst.renderFile('./views/mails/' + template,
+  jst.renderFile('../views/mails/' + template,
     { user: user,
       config: config
     }, function(err, result) {
@@ -67,7 +67,7 @@ function updateUserDonation(data, logger) {
   });
 }
 
-var paypal = require('./lib/paypal')({
+var paypal = require('../lib/paypal')({
     path: '/paypal/IPN',
     email: 'guileen@gmail.com', // receiver_email
     log4js: config.logger,

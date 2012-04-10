@@ -1,45 +1,56 @@
-var http = require('http'),
-    https = require('https'),
-    fs = require('fs'),
-    connect = require('connect'),
-    config = require('./config'),
-    proxy_app = require('./proxy'),
-    api_app = require('./api_server'),
-    site_app = require('./site_app'),
-    logger = config.logger.getLogger('server');
+var http = require('http')
+  , https = require('https')
+  , fs = require('fs')
+  , connect = require('connect')
+  , config = require('./config')
+  , logger = config.logger.getLogger('server');
 
-var options = {
-  key: fs.readFileSync(__dirname + "/cert/server.key"),
-  cert: fs.readFileSync(__dirname + "/cert/server.crt")
-};
+var httpsPort = config.httpsPort
+  , httpPort = config.httpPort
+  , httpURL = 'http://' + config.server + (httpPort == 80 ? '' : ':' + httpPort)
+  , httpsURL = 'https://' + config.server + (httpsPort == 443 ? '' : ':' + httpsPort)
 
-config.useHttps = config.useHttps && true;
-config.port = config.port || (config.useHttps ? 443 : 80);
+var options = {}
 
-var app = module.exports = connect()
-  .use(connect.vhost(config.server, site_app))
-  .use(connect.vhost('api.' + config.server, api_app))
-  .use(connect.vhost('*.' + config.server, proxy_app))
+if(httpsPort) {
+  options.key= fs.readFileSync(__dirname + "/cert/server.key"),
+  options.cert= fs.readFileSync(__dirname + "/cert/server.crt")
+}
 
-// var server = module.exports = connect(
-//   // connect.logger(),
-//   function(req, res, next) {
-//     throw new Error('ssss')
-//     console.log(req.hostname)
-//     logger.log(req)
-//     next()
-//   },
-// // ,
-//   // connect.vhost(config.server, site_app),
-//   // connect.vhost('api.' + config.server, api_app),
-//   // connect.vhost('*.' + config.server, proxy_app),
-//   // site_app
-// );
+var proxy = global.proxy =  require('./lib/proxy')({
+    // ---- remove below
+    server: config.server
+  , port: httpPort
+  , httpsPort: httpsPort
+  , useHttps: false
+    // -----------
+  , httpURL: httpURL
+  , httpsURL: httpsURL
+  , compress: !!config.compress
+  , logger: config.logger
+});
+
+var app = module.exports = connect(options)
+  .use(connect.vhost(config.server, require('./app')))
+  .use(connect.vhost('ipn.' + config.server, require('./routes/ipn')))
+  .use(connect.vhost('*.' + config.server, proxy))
 
 process.on('uncaughtException', function(err) {
     return logger.error('UncaughtException', err);
 });
 
 if (!module.parent) {
-  app.listen(config.port);
+  if(httpsPort) {
+    https.createServer(options, app).listen(httpsPort);
+  }
+
+  if(config.forceHtpps) {
+    var _app = connect().use(function(req, res) {
+        // TODO
+        res.redirect(httpsURL);
+    });
+    http.createServer(_app).listen(httpPort);
+  } else {
+    http.createServer(app).listen(httpPort);
+  }
 }

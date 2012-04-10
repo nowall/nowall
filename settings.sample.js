@@ -1,8 +1,9 @@
 module.exports = {
   logfile: './node-server.log',
   server: 'dev',//'nowall.be',
-  port: 3000,
-  useHttps: false,
+  httpPort: 3000,
+  httpsPort: 3333, // set to undefined if no cert
+  forceHtpps: false,
 
   database: 'mongodb://localhost/nowall',
   auth_database: 'mongodb://localhost/oauth',

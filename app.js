@@ -1,7 +1,7 @@
 var express = require('express'),
     config = require('./config'),
     querystring = require('querystring'),
-    db = require('./database'),
+    db = require('./lib/store'),
     app = module.exports = express.createServer();
 
 var RedisStore = require('connect-redis')(express);
@@ -116,7 +116,7 @@ app.get('/search', function(req, res) {
               q: q
           });
         }
-        return res.redirect(proxy.encodeLocation(url));
+        return res.redirect(global.proxy.encodeLocation(url));
     });
 });
 

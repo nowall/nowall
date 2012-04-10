@@ -17,7 +17,7 @@ form(target="paypal", action="https://www#{dev ? '.sandbox' : ''}.paypal.com/cgi
   input(type="hidden", name="image_url", value='http://#{config.serverAndPort}/images/nowall.small.png')
   input(type="hidden", name="return", value="http://#{config.serverAndPort}/donation/success")
   input(type="hidden", name="cancel_return", value="http://#{config.serverAndPort}/donation/cancel")
-  input(type="hidden", name="notify_url", value="http://api.#{config.serverAndPort}/paypal/IPN")
+  input(type="hidden", name="notify_url", value="http://ipn.#{config.serverAndPort}/paypal/IPN")
   p
     label
       input(type='radio', name='amount', value='1')
