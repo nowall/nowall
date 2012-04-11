@@ -1,5 +1,5 @@
 var connect = require('connect'),
-    config = require('../config'),
+    config = require('../settings'),
     db = require('../lib/store'),
     jst = require('jst'),
     sendmail = require('sendmail').sendmail,

@@ -2,6 +2,7 @@ var express = require('express'),
     config = require('./settings'),
     querystring = require('querystring'),
     db = require('./lib/store'),
+    encode = require('./lib/encodev2')(config.proxyOption),
     app = module.exports = express.createServer();
 
 var RedisStore = require('connect-redis')(express);
@@ -116,7 +117,7 @@ app.get('/search', function(req, res) {
               q: q
           });
         }
-        return res.redirect(global.proxy.encodeLocation(url));
+        return res.redirect(encode.encodeUrl(url));
     });
 });
 

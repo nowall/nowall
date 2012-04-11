@@ -2,22 +2,37 @@ var http = require('http')
   , https = require('https')
   , fs = require('fs')
   , connect = require('connect')
-  , config = require('./config')
-  , logger = config.logger.getLogger('server');
+  , config = require('./settings')
+  , log4js = require('log4js')
+  ;
+
+// apply settings
+// TODO 重新整理这段代码
+config.port = config.port || 443;
+config.useHttps = config.useHttps || this.port === 443;
+config.compress = config.compress || false;
+
+if (config.port === 443 || config.port === 80) {
+  config.serverAndPort = config.server;
+} else {
+  config.serverAndPort = config.server + ':' + config.port;
+}
+
+config.scheme = config.useHttps && 'https' || 'http';
+config.searchUrl = "" + config.scheme + "://search." + config.serverAndPort;
+config.baseUrl = "" + config.scheme + "://" + config.serverAndPort;
+
+log4js.addAppender(log4js.fileAppender(config.logfile));
+config.logger = log4js;
 
 var httpsPort = config.httpsPort
   , httpPort = config.httpPort
-  , httpURL = 'http://' + config.server + (httpPort == 80 ? '' : ':' + httpPort)
-  , httpsURL = 'https://' + config.server + (httpsPort == 443 ? '' : ':' + httpsPort)
+  , httpURL = 'http://ssl.' + config.server + (httpPort == 80 ? '' : ':' + httpPort)
+  , httpsURL = 'https://ssl.' + config.server + (httpsPort == 443 ? '' : ':' + httpsPort)
+  , logger = config.logger.getLogger('server');
+  ;
 
-var options = {}
-
-if(httpsPort) {
-  options.key= fs.readFileSync(__dirname + "/cert/ssl.key"),
-  options.cert= fs.readFileSync(__dirname + "/cert/ssl.crt")
-}
-
-var proxy = global.proxy =  require('./lib/proxy')({
+config.proxyOption = {
     // ---- remove below
     server: config.server
   , port: httpPort
@@ -26,14 +41,42 @@ var proxy = global.proxy =  require('./lib/proxy')({
     // -----------
   , httpURL: httpURL
   , httpsURL: httpsURL
+  , baseURL: httpsURL
   , compress: !!config.compress
   , logger: config.logger
-});
+}
 
-var app = module.exports = connect(options)
-  .use(connect.vhost(config.server, require('./app')))
+var proxyv1 = global.proxy = require('./lib/proxy')(config.proxyOption);
+
+var proxyv2 = require('./lib/proxyv2')(config.proxyOption);
+
+var options = {}
+
+if(httpsPort) {
+  options.key= fs.readFileSync(__dirname + "/cert/ssl.key"),
+  options.cert= fs.readFileSync(__dirname + "/cert/ssl.crt")
+}
+
+var appv2 = module.exports = connect(options)
+  .use(connect.vhost('www.' + config.server, require('./appv2')))
   .use(connect.vhost('ipn.' + config.server, require('./routes/ipn')))
-  .use(connect.vhost('*.' + config.server, proxy))
+// v2 proxy
+  .use(connect.vhost('ssl.' + config.server, proxyv2))
+// home
+  .use(connect.vhost(config.server, require('./appv2')))
+// v1 proxy
+  .use(connect.vhost('*.' + config.server, proxyv1))
+
+var appv1 = connect(options)
+  .use(connect.vhost('ipn.' + config.server, require('./routes/ipn')))
+  .use(connect.vhost('v1.' + config.server, require('./app')))
+
+if(config.forceHtpps) {
+  v1app.use(connect.vhost(config.server, function(req, res, next){
+        res.redirect(config.httpsURL);
+  }));
+}
+appv1.use(connect.vhost('*.' + config.server, proxyv1))
 
 process.on('uncaughtException', function(err) {
     return logger.error('UncaughtException', err);
@@ -41,16 +84,7 @@ process.on('uncaughtException', function(err) {
 
 if (!module.parent) {
   if(httpsPort) {
-    https.createServer(options, app).listen(httpsPort);
+    https.createServer(options, appv2).listen(httpsPort);
   }
-
-  if(config.forceHtpps) {
-    var _app = connect().use(function(req, res) {
-        // TODO
-        res.redirect(httpsURL);
-    });
-    http.createServer(_app).listen(httpPort);
-  } else {
-    http.createServer(app).listen(httpPort);
-  }
+  http.createServer(appv1).listen(httpPort);
 }
