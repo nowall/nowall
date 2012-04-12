@@ -80,9 +80,7 @@ process.on('uncaughtException', function(err) {
     return logger.error('UncaughtException', err);
 });
 
-if (!module.parent) {
-  if(httpsPort) {
-    https.createServer(options, appv2).listen(httpsPort);
-  }
-  http.createServer(appv1).listen(httpPort);
+if(httpsPort) {
+  https.createServer(options, appv2).listen(httpsPort);
 }
+http.createServer(appv1).listen(httpPort);
