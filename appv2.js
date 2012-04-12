@@ -48,6 +48,7 @@ app.get('/', function(req, res) {
 app.get('/here', function(req, res) {
     res.render('index', {
         title: 'No WALL be here'
+      , version: 'v2'
     });
 });
 

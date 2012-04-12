@@ -11,6 +11,15 @@
     !=partial('donation')
 
   .footer
+    if(version == 'v1')
+      a(href="https://#{config.serverAndPort}#{config.httpsPortSuffix}/here") 切换到SSL版
+      &nbsp;
+      a(href="https://github.com/guileen/nowall/wiki/SSL", title="什么是SSL")
+        small [?]
+    else
+      a(href="http://#{config.server}#{config.httpPortSuffix}/here") 切换到旧版
+
+    &nbsp;|&nbsp;
     a(href="https://github.com/guileen/nowall/issues") 问题反馈
     &nbsp;|
     script(src="http://s19.cnzz.com/stat.php?id=4016542&web_id=4016542&online=1&show=line")

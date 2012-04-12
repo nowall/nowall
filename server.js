@@ -25,10 +25,13 @@ config.baseUrl = "" + config.scheme + "://" + config.serverAndPort;
 log4js.addAppender(log4js.fileAppender(config.logfile));
 config.logger = log4js;
 
+
 var httpsPort = config.httpsPort
   , httpPort = config.httpPort
-  , httpURL = 'http://ssl.' + config.server + (httpPort == 80 ? '' : ':' + httpPort)
-  , httpsURL = 'https://ssl.' + config.server + (httpsPort == 443 ? '' : ':' + httpsPort)
+  , httpPortSuffix = config.httpPortSuffix = httpPort == 80 ? '' : ':' + httpPort
+  , httpsPortSuffix = config.httpsPortSuffix = httpsPort == 443 ? '' : ':' + httpsPort
+  , httpURL = config.httpURL = 'http://ssl.' + config.server + config.httpPortSuffix
+  , httpsURL = config.httpsURL = 'https://ssl.' + config.server + config.httpsPortSuffix
   , logger = config.logger.getLogger('server');
   ;
 

@@ -45,8 +45,11 @@ if(config.forceHtpps) {
   // forHttps
   app.get('/*', function(req, res, next) {
       var domain = req.headers.host.split(':')[0];
-      var port = config.httpsPort == 443 ? '' : (':' + config.httpsPort);
-      res.redirect('https://' + domain + port + req.url);
+      if(domain == config.server) {
+        res.redirect('https://' + domain + config.httpsPortSuffix)
+      } else {
+        next();
+      }
   })
 }
 
@@ -57,6 +60,7 @@ app.get('/', function(req, res) {
 app.get('/here', function(req, res) {
     res.render('index', {
         title: 'No WALL be here'
+      , version: 'v1'
     });
 });
 
