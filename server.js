@@ -62,21 +62,16 @@ var appv2 = module.exports = connect(options)
   .use(connect.vhost('ipn.' + config.server, require('./routes/ipn')))
 // v2 proxy
   .use(connect.vhost('ssl.' + config.server, proxyv2))
-// home
-  .use(connect.vhost(config.server, require('./appv2')))
 // v1 proxy
   .use(connect.vhost('*.' + config.server, proxyv1))
+// home
+  .use(require('./appv2'))
 
 var appv1 = connect(options)
   .use(connect.vhost('ipn.' + config.server, require('./routes/ipn')))
   .use(connect.vhost('v1.' + config.server, require('./app')))
-
-if(config.forceHtpps) {
-  v1app.use(connect.vhost(config.server, function(req, res, next){
-        res.redirect(config.httpsURL);
-  }));
-}
-appv1.use(connect.vhost('*.' + config.server, proxyv1))
+  .use(connect.vhost('*.' + config.server, proxyv1))
+  .use(require('./app'));
 
 process.on('uncaughtException', function(err) {
     return logger.error('UncaughtException', err);

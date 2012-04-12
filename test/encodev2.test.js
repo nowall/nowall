@@ -53,6 +53,11 @@ describe('encodev2', function(){
             should.not.exist(encode.decodeUrl('/abcde?q=v#anchor'));
         });
 
+        it('should parse root url', function() {
+            encode.decodeUrl('https://ssl.nowall.be/?px!=http://test.com')
+              .should.equal('http://test.com/');
+        })
+
         it('should parse full url', function() {
             encode.decodeUrl('https://nowall.be/foo?p1=v1&px!=http://t.cn#anchor')
               .should.equal('http://t.cn/foo?p1=v1#anchor');
@@ -122,12 +127,10 @@ describe('encodev2', function(){
 
     describe('encodeResponseV2', function() {
         it('should not unlimited redirect', function() {
-            var res = encode.decodeResponse({
-                headers: {
-                  location: 'http://google.com/search?q=test'
-                }
+            var res = encode.encodeResponseHeaders({
+                location: 'http://google.com/search?q=test'
             });
-            res.hea
+            res.location.should.equal('https://nowall.be/search?q=test&px!=http://google.com')
         })
     })
 
