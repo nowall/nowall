@@ -132,6 +132,17 @@ describe('encodev2', function(){
             });
             res.location.should.equal('https://nowall.be/search?q=test&px!=http://google.com')
         })
+
+        it('should parse relative redirection', function() {
+            var res = encode.encodeResponseHeaders({
+                location: '/j?k='
+              }, {
+                host: 'test.com'
+              , port: 443
+              , isSecure: true
+            });
+            res.location.should.equal('https://nowall.be/j?k=&px!=https://test.com')
+        });
     })
 
 })
