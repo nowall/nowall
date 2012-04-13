@@ -20,6 +20,7 @@
   , "hiredis":">=0.0.1"
   , "redis":">=0.0.1"
   , "connect-redis": ">=0.0.1"
+  , "connect-block": "=0.1.0"
   , "mongoskin":">=0.3.4"
   , "log4js":">=0.2.0"
   , "sendmail":">=0.0.1"

@@ -2,6 +2,7 @@ var http = require('http')
   , https = require('https')
   , fs = require('fs')
   , connect = require('connect')
+  , connect_block = require('connect-block')
   , config = require('./settings')
   , log4js = require('log4js')
   ;
@@ -60,7 +61,10 @@ if(httpsPort) {
   options.cert= fs.readFileSync(__dirname + "/cert/ssl.crt")
 }
 
+var block_bot = connect_block({agent: ['google', 'baidu'], text: 'Goodbye'});
+
 var appv2 = module.exports = connect(options)
+  .use(block_bot)
   .use(connect.vhost('www.' + config.server, require('./appv2')))
   .use(connect.vhost('ipn.' + config.server, require('./routes/ipn')))
 // v2 proxy
@@ -71,6 +75,7 @@ var appv2 = module.exports = connect(options)
   .use(require('./appv2'))
 
 var appv1 = connect(options)
+  .use(block_bot)
   .use(connect.vhost('ipn.' + config.server, require('./routes/ipn')))
   .use(connect.vhost('v1.' + config.server, require('./app')))
   .use(connect.vhost('*.' + config.server, proxyv1))
