@@ -11,7 +11,6 @@ var http = require('http')
 // TODO 重新整理这段代码
 config.port = config.port || 443;
 config.useHttps = config.useHttps || this.port === 443;
-config.compress = config.compress || false;
 
 if (config.port === 443 || config.port === 80) {
   config.serverAndPort = config.server;
@@ -46,7 +45,7 @@ config.proxyOption = {
   , httpURL: httpURL
   , httpsURL: httpsURL
   , baseURL: httpsURL
-  , compress: !!config.compress
+  , compress: config.compress
   , logger: config.logger
 }
 
@@ -82,7 +81,7 @@ var appv1 = connect(options)
   .use(require('./app'));
 
 process.on('uncaughtException', function(err) {
-    return logger.error('UncaughtException', err);
+    return logger.error('UncaughtException', err.stack);
 });
 
 if(httpsPort) {
