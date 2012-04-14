@@ -94,6 +94,10 @@ describe('encodev2', function(){
             var script = ' var swf = "  s\\u0072c=\\"https:\\/\\/s.ytimg.com\\/yt\\/swfbin\\/watch_as3-vflF75dGN.swf\\"   ;ad3_module=https%3A%2F%2Fs.ytimg.com%2Fyt%2Fswfbin%2Fad3-vflr05jiO.swf\\u0026amp;enablecsi=1\\u0026amp;iv3_module=https%3A%2F%2Fs.ytimg.com%2Fyt%2Fswfbin%2Fiv3_module-vflfak9F6.swf\\u0026amp;gut_tag=%2F4061%2Fytpwmpu%2Fmain_471\\u0026amp"';
             var encodedScript = encode.encodeScript(script);
             encodedScript.should.equal(' var swf = "  s\\u0072c=\\"https:\\/\\/nowall.be\\/yt\\/swfbin\\/watch_as3-vflF75dGN.swf?px!=https:\\/\\/s.ytimg.com\\"   ;ad3_module=https%3A%2F%2Fnowall.be%2Fyt%2Fswfbin%2Fad3-vflr05jiO.swf%3Fpx!%3Dhttps%3A%2F%2Fs.ytimg.com\\u0026amp;enablecsi=1\\u0026amp;iv3_module=https%3A%2F%2Fnowall.be%2Fyt%2Fswfbin%2Fiv3_module-vflfak9F6.swf%3Fpx!%3Dhttps%3A%2F%2Fs.ytimg.com\\u0026amp;gut_tag=%2F4061%2Fytpwmpu%2Fmain_471\\u0026amp"');
+
+            script = ' var swf = "  flashvars=\\"url=http%3A%2F%2Fo-o.preferred.nuq04s10.v5.lscache4.c.youtube.com%2Fvideoplayback%3Fupn%3Ds0XIsevkJTA%26sparams&quality=medium';
+            encodedScript = encode.encodeScript(script);
+            encodedScript.should.equal(' var swf = "  flashvars=\\"url=https%3A%2F%2Fnowall.be%2Fvideoplayback%3Fupn%3Ds0XIsevkJTA%26sparams%26px!%3Dhttp%3A%2F%2Fo-o.preferred.nuq04s10.v5.lscache4.c.youtube.com&quality=medium');
         })
     });
 
