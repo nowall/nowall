@@ -74,13 +74,18 @@ describe('encodev2', function(){
     });
 
     describe('encodeBody', function(){
+        it('should handle none scheme', function() {
+            var encodedBody = encode.encodeBody('blabla<script id="www-core-js" src="//s.ytimg.com/yt/jsbin/www-core-vflb497eV.js"></script>blabla');
+            encodedBody.should.equal('blabla<script id="www-core-js" src="https://nowall.be/yt/jsbin/www-core-vflb497eV.js?px!=http://s.ytimg.com"></script>blabla')
+        })
+
         it('should script', function(){
-            var encodedBody = encode.encodeBody('<script>var x="douban.com";</script><a href="http://www.douban.com">www.douban.com</a><cite>www.douban.com/<b>test</b>/</cite><script type="text/javascript">var x="douban.com";\nl"api":"http:\\/\\/a2.twimg.com\\/a\\/1302888170\\/javascripts\\/api.bundle.js", \nhostname.match(/(^(www|api)\\.)?twitter\\.com$/)</script>', false, true)
+            var encodedBody = encode.encodeBody('<script>var x="douban.com";</script><a href="http://www.douban.com">www.douban.com</a><cite>www.douban.com/<b>test</b>/</cite><script type="text/javascript">var x="douban.com";\nl"api":"http:\\/\\/a2.twimg.com\\/a\\/1302888170\\/javascripts\\/api.bundle.js", \nhostname.match(/(^(www|api)\\.)?twitter\\.com$/)</script>', false)
             encodedBody.should.equal('<script>var x="douban.com";</script><a href="https://nowall.be/?px!=http://www.douban.com">www.douban.com</a><cite>www.douban.com/<b>test</b>/</cite><script type="text/javascript">var x="douban.com";\nl"api":"http:\\/\\/a2.twimg.com\\/a\\/1302888170\\/javascripts\\/api.bundle.js", \nhostname.match(/(^(www|api)\\.)?twitter\\.com$/)</script>')
         })
 
         it('should css', function() {
-            var encodedBody = encode.encodeBody('<link type="text/css" rel="stylesheet" href="http://static.ak.fbcdn.net/rsrc.php/v1/y2/r/8Sr4ddHR5zZ.css" />', false, true);
+            var encodedBody = encode.encodeBody('<link type="text/css" rel="stylesheet" href="http://static.ak.fbcdn.net/rsrc.php/v1/y2/r/8Sr4ddHR5zZ.css" />', false);
             encodedBody.should.equal('<link type="text/css" rel="stylesheet" href="https://nowall.be/rsrc.php/v1/y2/r/8Sr4ddHR5zZ.css?px!=http://static.ak.fbcdn.net" />')
         })
     });
