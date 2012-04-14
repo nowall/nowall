@@ -73,10 +73,22 @@ var appv2 = module.exports = connect(options)
 // home
   .use(require('./appv2'))
 
+function redirectToHttps (req, res, next) {
+  if(req.method === 'GET') {
+    var url = req.headers.host.replace(httpPortSuffix, httpsPortSuffix) + req.url;
+    console.log(url)
+    res.writeHead(302, {
+        location: 'https://' + url
+    });
+    res.end();
+  }
+}
+
 var appv1 = connect(options)
   .use(block_bot)
   .use(connect.vhost('ipn.' + config.server, require('./routes/ipn')))
   .use(connect.vhost('v1.' + config.server, require('./app')))
+  .use(redirectToHttps)
   .use(connect.vhost('*.' + config.server, proxyv1))
   .use(require('./app'));
 

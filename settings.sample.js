@@ -3,7 +3,6 @@ module.exports = {
   server: 'dev',//'nowall.be',
   httpPort: 3000,
   httpsPort: 3333, // set to undefined if no cert
-  forceHtpps: false,
 
   database: 'mongodb://localhost/nowall',
   auth_database: 'mongodb://localhost/oauth',

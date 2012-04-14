@@ -40,19 +40,6 @@ app.helpers({
   , dev : app.settings.env == 'development'
 });
 
-if(config.forceHtpps) {
-  console.log('forHttps')
-  // forHttps
-  app.get('/*', function(req, res, next) {
-      var domain = req.headers.host.split(':')[0];
-      if(domain == config.server) {
-        res.redirect('https://' + domain + config.httpsPortSuffix)
-      } else {
-        next();
-      }
-  })
-}
-
 app.get('/', function(req, res) {
     res.redirect('/here');
 });
