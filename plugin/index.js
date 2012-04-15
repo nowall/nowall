@@ -4,7 +4,13 @@ var exports = module.exports = function(options) {
   return {
     handle: function(req, res, sreq, sres, snext, logger) {
       var index = 0;
-      console.log(index);
+
+      var ctx = {
+        creq : req
+      , cres : res
+      , sreq : sreq
+      , sres : sres
+      };
 
       function next() {
         if(index >= plugins.length) {
@@ -16,7 +22,7 @@ var exports = module.exports = function(options) {
           throw new Error('no plugin at ' + index);
         }
         console.log(plugin)
-        plugin(req, res, sreq, sres, next, logger);
+        plugin.call(ctx, ctx.creq, ctx.cres, ctx.sreq, ctx.sres, next, logger);
       }
 
       next();
@@ -30,6 +36,7 @@ var exports = module.exports = function(options) {
 
 }
 
+exports.stream = require('./stream');
 exports.youtube = require('./youtube');
 exports.twitter = require('./twitter');
 exports.bodyEncoder = require('./bodyencoder').bodyEncoder;
