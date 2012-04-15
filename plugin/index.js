@@ -12,16 +12,19 @@ var exports = module.exports = function(options) {
       , sres : sres
       };
 
-      function next() {
+      function next(err) {
+        if(err) return snext(err);
+
         if(index >= plugins.length) {
           return snext();
         }
+
         var plugin = plugins[index++];
         if(!plugin) {
           console.dir(plugins);
           throw new Error('no plugin at ' + index);
         }
-        console.log(plugin)
+
         plugin.call(ctx, ctx.creq, ctx.cres, ctx.sreq, ctx.sres, next, logger);
       }
 
