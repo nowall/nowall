@@ -3,7 +3,12 @@ var should = require('should')
       baseURL:'https://nowall.be'
     , serverAndPort: 'nowall.be'
     , whiteList: ['github.com', 'plusone.google.com'] // test hostname only, not url
-    , debug: true
+    , debug: false
+    , reqOptions: {
+        host: 'test.com'
+      , port: 443
+      , isSecure: true
+      }
     }
   , e = encodeURIComponent
   , encode = require('../lib/encodev2')(options);
@@ -15,9 +20,15 @@ describe('encodev2', function(){
         it('should ?px!', function(){
             encode.encodeUrl('http://www.twitter.com').should.equal(
               'https://nowall.be/?px!=http://www.twitter.com');
+            encode.encodeUrl('://www.twitter.com').should.equal(
+              'https://nowall.be/?px!=http://www.twitter.com');
         })
 
-        it('should not equal host', function(){
+        it('should encode relative path', function(){
+            encode.encodeUrl('/login').should.equal('/login?px!=https://test.com');
+        })
+
+        it('should encode host', function(){
             // complex query
             encode.encodeUrl('http://groups.google.com/?p1=v1&p2=v2').should.equal('https://nowall.be/?p1=v1&p2=v2&px!=http://groups.google.com');
 
@@ -75,8 +86,15 @@ describe('encodev2', function(){
     });
 
     describe('encodeBody', function(){
+
+        it('should handle href link', function() {
+            encode.encodeBody('<p><a href="../login">test</a><a href="http://www.test.com/test">full</a>')
+              .should.equal('<p><a href="../login?px!=https://test.com">test</a><a href="https://nowall.be/test?px!=http://www.test.com">full</a>');
+
+        });
+
         it('should handle none scheme', function() {
-            var encodedBody = encode.encodeBody('blabla<script id="www-core-js" src="//s.ytimg.com/yt/jsbin/www-core-vflb497eV.js"></script>blabla');
+            var encodedBody = encode.encodeBody('blabla<script id="www-core-js" src="://s.ytimg.com/yt/jsbin/www-core-vflb497eV.js"></script>blabla');
             encodedBody.should.equal('blabla<script id="www-core-js" src="https://nowall.be/yt/jsbin/www-core-vflb497eV.js?px!=http://s.ytimg.com"></script>blabla')
         })
 
@@ -115,6 +133,19 @@ describe('encodev2', function(){
     });
 
     describe('decodeRequestV2', function() {
+
+        var options = {
+              baseURL:'https://nowall.be'
+            , serverAndPort: 'nowall.be'
+            , whiteList: ['github.com', 'plusone.google.com'] // test hostname only, not url
+            , debug: true
+            , reqOptions: {
+                host: 'test.com'
+              , port: 443
+              , isSecure: true
+              }
+            }
+        var encode = require('../lib/encodev2')(options);
         it('should return null', function(){
             should.not.exist(encode.decodeRequestV2({
                   url: '/here'
@@ -159,12 +190,8 @@ describe('encodev2', function(){
         it('should parse relative redirection', function() {
             var res = encode.encodeResponseHeaders({
                 location: '/j?k='
-              }, {
-                host: 'test.com'
-              , port: 443
-              , isSecure: true
-            });
-            res.location.should.equal('https://nowall.be/j?k=&px!=https://test.com')
+              });
+            res.location.should.equal('/j?k=&px!=https://test.com')
         });
     })
 
