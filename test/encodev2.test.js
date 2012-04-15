@@ -2,7 +2,7 @@ var should = require('should')
   , options = {
       baseURL:'https://nowall.be'
     , serverAndPort: 'nowall.be'
-    , whiteList: ['github.com'] // test hostname only, not url
+    , whiteList: ['github.com', 'plusone.google.com'] // test hostname only, not url
     , debug: true
     }
   , e = encodeURIComponent
@@ -98,6 +98,10 @@ describe('encodev2', function(){
             script = ' var swf = "  flashvars=\\"url=http%3A%2F%2Fo-o.preferred.nuq04s10.v5.lscache4.c.youtube.com%2Fvideoplayback%3Fupn%3Ds0XIsevkJTA%26sparams&quality=medium';
             encodedScript = encode.encodeScript(script);
             encodedScript.should.equal(' var swf = "  flashvars=\\"url=https%3A%2F%2Fnowall.be%2Fvideoplayback%3Fupn%3Ds0XIsevkJTA%26sparams%26px!%3Dhttp%3A%2F%2Fo-o.preferred.nuq04s10.v5.lscache4.c.youtube.com&quality=medium');
+
+            script = 'this.lf&&Rh(Se("https://plusone.google.com/_/+1/confirm",{url:a.url,source:"google:youtube"}),{width:480,height:550}))};'
+            encodedScript = encode.encodeScript(script);
+            encodedScript.should.equal(script);
         })
     });
 
