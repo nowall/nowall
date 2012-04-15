@@ -5,6 +5,7 @@ var http = require('http')
   , connect_block = require('connect-block')
   , config = require('./settings')
   , log4js = require('log4js')
+  , plugin = require('./plugin')
   ;
 
 // apply settings
@@ -35,6 +36,11 @@ var httpsPort = config.httpsPort
   , logger = config.logger.getLogger('server');
   ;
 
+var plugins = plugin()
+  .use(plugin.youtube)
+  .use(plugin.twitter)
+  .use(plugin.bodyEncoder) // encodeBody and write to response
+
 config.proxyOption = {
     // ---- remove below
     server: config.server
@@ -47,22 +53,16 @@ config.proxyOption = {
   , baseURL: httpsURL
   , compress: config.compress
   , logger: config.logger
+  , plugins: plugins
 }
 
 var proxyv1 = global.proxy = require('./lib/proxy')(config.proxyOption);
 
 var proxyv2 = require('./lib/proxyv2')(config.proxyOption);
 
-var options = {}
-
-if(httpsPort) {
-  options.key= fs.readFileSync(__dirname + "/cert/ssl.key"),
-  options.cert= fs.readFileSync(__dirname + "/cert/ssl.crt")
-}
-
 var block_bot = connect_block({agent: ['google', 'baidu'], text: 'Goodbye'});
 
-var appv2 = module.exports = connect(options)
+var appv2 = module.exports = connect()
   .use(block_bot)
   .use(connect.vhost('www.' + config.server, require('./appv2')))
   .use(connect.vhost('ipn.' + config.server, require('./routes/ipn')))
@@ -84,7 +84,7 @@ function redirectToHttps (req, res, next) {
   }
 }
 
-var appv1 = connect(options)
+var appv1 = connect()
   .use(block_bot)
   .use(connect.vhost('ipn.' + config.server, require('./routes/ipn')))
   .use(connect.vhost('v1.' + config.server, require('./app')))
@@ -97,6 +97,12 @@ process.on('uncaughtException', function(err) {
 });
 
 if(httpsPort) {
+
+  var options = {
+    key: fs.readFileSync(__dirname + "/cert/ssl.key")
+  , cert: fs.readFileSync(__dirname + "/cert/ssl.crt")
+  }
+
   https.createServer(options, appv2).listen(httpsPort);
 }
 http.createServer(appv1).listen(httpPort);
