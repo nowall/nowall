@@ -37,7 +37,7 @@ exports.replacePlayer = function(body, player) {
       var flashvars = exports.stripFlashvars(script);
       if(!flashvars) return full;
       // console.log(flashvars);
-      flashvars.flvurl = flashvars.url_encoded_fmt_stream_map.url;
+      flashvars.flvurl = encodeURIComponent(flashvars.url_encoded_fmt_stream_map.url);
       return template.render(player, flashvars);
   })
 }
