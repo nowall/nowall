@@ -46,6 +46,18 @@ describe('encodev2', function(){
             encode.encodeUrl('http://github.com').should.equal('http://github.com');
             encode.encodeUrl('http://guileen.github.com').should.equal('http://guileen.github.com');
         })
+
+        it('should no more path', function(){
+            // FIXME https://ssl.nowall.be:3333/gb/images/b_8d5afc09.png?px!=http://ssl.gstatic.com/gb/images/b_8d5afc09.png
+        })
+
+        it('should not encode data:', function(){
+            encode.encodeUrl('data:image/jpeg;base64blabla').should.equal('data:image/jpeg;base64blabla')
+        })
+
+        it('should not unlimited parse', function(){
+            encode.encodeUrl('https://nowall.be/test').should.equal('https://nowall.be/test');
+        })
     });
 
     describe('decodeUrl', function() {
@@ -83,6 +95,7 @@ describe('encodev2', function(){
             console.log(encode.encodeScript('domain.xx="www.goo-gle.com.hk";'))
             console.log(encode.encodeScript('"api":"http:\\/\\/a2.twimg.com\\/a\\/1302888170\\/javascripts\\/api.bundle.js", hostname.match(/(^(www|api)\\.)?twitter\\.com$/) '))
         })
+
     });
 
     describe('encodeBody', function(){
@@ -98,6 +111,10 @@ describe('encodev2', function(){
             encodedBody.should.equal('blabla<script id="www-core-js" src="https://nowall.be/yt/jsbin/www-core-vflb497eV.js?px!=http://s.ytimg.com"></script>blabla')
         })
 
+        it('should on correct postion', function() {
+            encode.encodeBody('<script>{swfobject.embedSWF("https://nowall.be/swf/player.swf", "player_normal", "400", "300", "9.0.45", "", flashvars, params, attributes)\n;})();\n//]]\n</script>', false)
+              .should.equal('<script>{swfobject.embedSWF("https://nowall.be/swf/player.swf", "player_normal", "400", "300", "9.0.45", "", flashvars, params, attributes)\n;})();\n//]]\n</script>', false);
+        })
         it('should script', function(){
             var encodedBody = encode.encodeBody('<script>var x="douban.com";</script><a href="http://www.douban.com">www.douban.com</a><cite>www.douban.com/<b>test</b>/</cite><script type="text/javascript">var x="douban.com";\nl"api":"http:\\/\\/a2.twimg.com\\/a\\/1302888170\\/javascripts\\/api.bundle.js", \nhostname.match(/(^(www|api)\\.)?twitter\\.com$/)</script>', false)
             encodedBody.should.equal('<script>var x="douban.com";</script><a href="https://nowall.be/?px!=http://www.douban.com">www.douban.com</a><cite>www.douban.com/<b>test</b>/</cite><script type="text/javascript">var x="douban.com";\nl"api":"https:\\/\\/nowall.be\\/a\\/1302888170\\/javascripts\\/api.bundle.js?px!=http:\\/\\/a2.twimg.com", \nhostname.match(/(^(www|api)\\.)?twitter\\.com$/)</script>')
