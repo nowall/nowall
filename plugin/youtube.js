@@ -6,7 +6,7 @@ var exports = module.exports = function(req, res, sreq, sres, next){
   if(vid) {
     template.load('flvplayer.html', function(err, data) {
         if(err) return next(err);
-        res.body = exports.replacePlayer(res.body, player);
+        res.body = exports.replacePlayer(res.body, data);
         next();
     })
   } else {
