@@ -56,7 +56,7 @@ describe('encodev2', function(){
         })
 
         it('should not unlimited parse', function(){
-            encode.encodeUrl('https://nowall.be/test').should.equal('https://nowall.be/test');
+            encode.encodeUrl(encode.encodeUrl('http://twitter.com')).should.equal('https://nowall.be/?px!=http://twitter.com');
         })
     });
 
