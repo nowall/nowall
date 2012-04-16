@@ -4,8 +4,11 @@ var exports = module.exports = function(req, res, sreq, sres, next){
   var vid = exports.getVid(req);
 
   if(vid) {
+    console.log('match youtube');
+
     template.load('flvplayer.html', function(err, data) {
         if(err) return next(err);
+        console.log('loaded template');
         res.body = exports.replacePlayer(res.body, data);
         next();
     })
@@ -30,6 +33,7 @@ exports.getVid = function(req) {
 // </script>
 exports.replacePlayer = function(body, player) {
   return body.replace(/<div id="watch-player" class="flash-player"><\/div>[\s\S]*?<script\s?[^>]*>([\s\S]*?)<\/script>/, function(full, script) {
+      console.log('found script');
       var flashvars = exports.stripFlashvars(script);
       if(!flashvars) return full;
       // console.log(flashvars);
