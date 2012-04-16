@@ -96,6 +96,11 @@ describe('encodev2', function(){
             console.log(encode.encodeScript('"api":"http:\\/\\/a2.twimg.com\\/a\\/1302888170\\/javascripts\\/api.bundle.js", hostname.match(/(^(www|api)\\.)?twitter\\.com$/) '))
         })
 
+        it('should not', function() {
+            encode.encodeScript('/*\n* http://test.com/license */window.foo=function(a,b,c)')
+              .should.equal('/*\n* http://test.com/license */window.foo=function(a,b,c)')
+        })
+
     });
 
     describe('encodeBody', function(){
