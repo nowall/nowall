@@ -24,6 +24,8 @@ describe('encodev2', function(){
               'https://nowall.be/?px!=http://www.twitter.com');
         })
 
+        // TODO should not encode empty string
+
         it('should encode relative path', function(){
             encode.encodeUrl('/login').should.equal('/login?px!=https://test.com');
         })
