@@ -61,14 +61,14 @@ describe('encodev2', function(){
     });
 
     describe('decodeUrl', function() {
-        it('should match ?px!', function() {
-            encode.decodeUrl('/?px!=http://twitter.com')
-              .should.equal('http://twitter.com/');
+        it('should decode extra params of ajax', function() {
+            encode.decodeUrl('/?px!=http://twitter.com&p1=v1&p2=v2')
+              .should.equal('http://twitter.com/?p1=v1&p2=v2');
         });
 
         it('should match &px!', function(){
-            encode.decodeUrl('/p/to/p?p1=v1&px!=https://twitter.com#anchor')
-              .should.equal('https://twitter.com/p/to/p?p1=v1#anchor');
+            encode.decodeUrl('/p/to/p?p1=v1&px!=https://twitter.com&p2=v2#anchor')
+              .should.equal('https://twitter.com/p/to/p?p1=v1&p2=v2#anchor');
         });
 
         it('should match referer', function() {
