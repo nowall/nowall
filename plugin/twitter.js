@@ -2,7 +2,7 @@ var exports = module.exports = function(req, res, sreq, sres, next){
   if(req.host.indexOf('twitter.com') >=0) {
     // &quot;url&quot;:&quot;http:\/\/t.co\/7zJEGfyo&quot;
     res.body = res.body.replace(/http:\\\/\\\/t.co\\\/[\w\d]+/ig, function(path) {
-        return req.encoder.encodeUrl(path.replace(/\\\//g, '/')).replace(/\//g, '\\/');
+        return sreq.encoder.encodeUrl(path.replace(/\\\//g, '/')).replace(/\//g, '\\/');
     })
 
     res.body = res.body.replace(/document.domain\s*=\s*['"].*['"];?/ig, '');
