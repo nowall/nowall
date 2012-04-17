@@ -7,12 +7,12 @@ var exports = module.exports = function(req, res, sreq, sres, next){
     // ,d=twttr.anywhere.api.endpoints[this.methodName];
     //if(!d)throw new Error("The endpoint, "+this.methodName+" is not a registered API method");
     res.body = res.body.replace(
-      'd=twttr.anywhere.api.endpoints[this.methodName];'
+      ',d=twttr.anywhere.api.endpoints[this.methodName];'
       // 'if(!d)throw new Error("The endpoint, "+this.methodName+" is not a registered API method");'
       //  The endpoint, account/verify_credentials?px!=https://twimg0-a.akamaihd.net is not a registered API method
-    , 'if(this.methodName.match(/.*px!=.*/)) ' + 
+    , ';if(this.methodName.match(/.*px!=.*/)) ' + 
       'this.methodName = this.methodName.replace(/.px!=.*$/, "");' +
-      'd=twttr.anywhere.api.endpoints[this.methodName];')
+      'var d=twttr.anywhere.api.endpoints[this.methodName];')
   }
   next();
 }
