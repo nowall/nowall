@@ -3,7 +3,7 @@ var zlib = require('zlib')
 
 exports.bodyEncoder  = function(creq, cres, sreq, sres, next, logger) {
   var encoder = sreq.encoder;
-  var body = encoder.encodeBody(cres.body, cres.isScript);
+  var body = encoder.encodeBody(cres.body, cres.isScript, cres.isStyle);
   sres.write(new Buffer(body, cres.encoding));
   sres.end();
 }

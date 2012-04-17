@@ -104,6 +104,13 @@ describe('encodev2', function(){
 
     });
 
+    describe('encodeStyle', function(){
+        it('should relative url', function(){
+            encode.encodeStyle('.img{ background: url(../imgs/foo.png)')
+              .should.equal('.img{ background: url(../imgs/foo.png?px!=https://test.com)');
+        })
+    })
+
     describe('encodeBody', function(){
 
         it('should handle href link', function() {

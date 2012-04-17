@@ -11,6 +11,7 @@ module.exports = function(creq, cres, sreq, sres, next, logger) {
   var isScript = contentType && /javascript/.test(contentType) ||
                  (isText && ! /text\/(css|html)/.test(contentType)) ||
                  /\.js(\?|#|$)/.test(creq.path);
+  var isStyle = contentType == 'text/css';
   isText = isText || isScript;
   logger.info('contentType:' + contentType + " isScript:" + isScript);
   var contentEncoding = cres.headers['content-encoding'];
@@ -80,6 +81,8 @@ module.exports = function(creq, cres, sreq, sres, next, logger) {
       }
 
       cres.encoding = encoding;
+      cres.isScript = isScript;
+      cres.isStyle = isStyle;
       cres.body = buffer.toString(encoding);
 
       return next();
