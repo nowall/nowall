@@ -40,6 +40,7 @@ var plugins = plugin()
   .use(plugin.stream)
   .use(plugin.youtube)
   .use(plugin.twitter)
+  .use(plugin.ga)
   .use(plugin.bodyEncoder) // encodeBody and write to response
 
 config.proxyOption = {

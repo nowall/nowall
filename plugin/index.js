@@ -42,4 +42,5 @@ var exports = module.exports = function(options) {
 exports.stream = require('./stream');
 exports.youtube = require('./youtube');
 exports.twitter = require('./twitter');
+exports.ga = require('./ga');
 exports.bodyEncoder = require('./bodyencoder').bodyEncoder;
