@@ -24,6 +24,11 @@ describe('encodev2', function(){
               'https://nowall.be/?px!=http://www.twitter.com');
         })
 
+        it('should encode ext', function(){
+            encode.encodeUrl('https://t-img.t.cn/p/test.png')
+              .should.equal('https://nowall.be/p/test.png?px!=https://t-img.t.cn');
+        })
+
         // TODO should not encode empty string
 
         it('should encode relative path', function(){
@@ -124,6 +129,13 @@ describe('encodev2', function(){
         it('should css', function() {
             var encodedBody = encode.encodeBody('<link type="text/css" rel="stylesheet" href="http://static.ak.fbcdn.net/rsrc.php/v1/y2/r/8Sr4ddHR5zZ.css" />', false);
             encodedBody.should.equal('<link type="text/css" rel="stylesheet" href="https://nowall.be/rsrc.php/v1/y2/r/8Sr4ddHR5zZ.css?px!=http://static.ak.fbcdn.net" />')
+        })
+
+        it('should stylesheet', function(){
+            encode.encodeBody(
+              '<style id="">\n.foo{ background-image: url(https://twimg0-a.akamaihd.net/images/themes/theme1/bg.png); }\n</style>')
+              .should.equal(
+              '<style id="">\n.foo{ background-image: url(https://nowall.be/images/themes/theme1/bg.png?px!=https://twimg0-a.akamaihd.net); }\n</style>')
         })
 
         it('should youtube', function() {
