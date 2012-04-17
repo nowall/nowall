@@ -10,7 +10,7 @@ var exports = module.exports = function(req, res, sreq, sres, next){
       //  The endpoint, account/verify_credentials?px!=https://twimg0-a.akamaihd.net is not a registered API method
       'if(!d) {' +
       'if(d.match(/.*px!=.*/))' + 
-      'd = d.replace(/.px!=.*$/, '');' +
+      'd = d.replace(/.px!=.*$/, "");' +
       'else throw new Error("The endpoint, "+this.methodName+" is not a registered API method");' +
       '}')
   }
