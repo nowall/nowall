@@ -15,8 +15,10 @@ describe('Youtube plugin ', function(){
     it('should replacePlayer', function(done) {
         fs.readFile(__dirname + '/watch_v=SAc0vQCC6UQ.html', 'utf8', function(err, body) {
             template.load('flvplayer.html', function(err, data) {
-                body = youtube.replacePlayer(body, data);
-                body.trim().should.equal(fs.readFileSync(__dirname + '/watch_v=SAc0vQCC6UQ.out.html', 'utf8').trim());
+                youtube.replacePlayer(body, data).replace(/\s+/g, ' ')
+                  .should.equal(fs.readFileSync(
+                    __dirname + '/watch_v=SAc0vQCC6UQ.out.html', 'utf8')
+                    .replace(/\s+/g, ' '));
                 done();
             });
         })

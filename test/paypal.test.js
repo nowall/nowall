@@ -56,18 +56,18 @@ describe('Paypal', function() {
                 done();
             });
         });
-        it('should duplicate', function(done) {
+        // it('should duplicate', function(done) {
 
-            ipn.verifyBody({
-                txn_id: 678,
-                receiver_email: 'guileen@gmail.com',
-                payment_status: 'Completed',
-                payment_gross: 20.00
-              }, {}, function(err) {
-                should.exist(err);
-                done();
-            });
+        //     ipn.verifyBody({
+        //         txn_id: 678,
+        //         receiver_email: 'guileen@gmail.com',
+        //         payment_status: 'Completed',
+        //         payment_gross: 20.00
+        //       }, {}, function(err) {
+        //         should.exist(err);
+        //         done();
+        //     });
 
-        });
+        // });
     });
 });

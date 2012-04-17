@@ -33,11 +33,10 @@ exports.getVid = function(req) {
 // </script>
 exports.replacePlayer = function(body, player) {
   return body.replace(/<div id="watch-player" class="flash-player"><\/div>[\s\S]*?<script\s?[^>]*>([\s\S]*?)<\/script>/, function(full, script) {
-      console.log('found script');
       var flashvars = exports.stripFlashvars(script);
       if(!flashvars) return full;
       // console.log(flashvars);
-      flashvars.flvurl = encodeURIComponent(flashvars.url_encoded_fmt_stream_map.url);
+      flashvars.flvurl = flashvars.url_encoded_fmt_stream_map.url;
       return template.render(player, flashvars);
   })
 }
