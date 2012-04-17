@@ -142,6 +142,13 @@ describe('encodev2', function(){
             script = 'url_encoded_fmt_stream_map=url%3Dhttp%253A%252F%252Fo-o.preferred.nuq04s10.v5.lscache4.c.youtube.com%252Fvideoplayback%253Fupn%253D6i66J8nCUTc%2526sparams%253Dalgorithm%25252Cburst%25252Ccp%25252Cfactor%25252Cid%25252Cip%25252Cipbits%25252Citag%25252Csource%25252Cupn%25252Cexpire%2526fexp%253D917000%25252C909703%25252C901802%25252C913101%25252C914102%2526algorithm%253Dthrottle-factor%2526itag%253D34%2526ip%253D50.0.0.0%2526burst%253D40%2526sver%253D3%2526signature%253D09FE3AC7146A5BCBAE0BDB7E19DD180B2971BF73.D93D68919C846A83A10971479CD039D204F6406F%2526source%253Dyoutube%2526expire%253D1334476230%2526key%253Dyt1%2526ipbits%253D8%2526factor%253D1.25%2526cp%253DU0hSSVRSVF9ISkNOMl9MTFhDOlV5MDVlQnY3b2c4%2526id%253D480734bd0082e944%26quality%3Dmedium%26fallback_host%';
             encode.encodeBody(script, true).should.equal('url_encoded_fmt_stream_map=url%3Dhttps%253A%252F%252Fnowall.be%252Fvideoplayback%253Fupn%253D6i66J8nCUTc%2526sparams%253Dalgorithm%25252Cburst%25252Ccp%25252Cfactor%25252Cid%25252Cip%25252Cipbits%25252Citag%25252Csource%25252Cupn%25252Cexpire%2526fexp%253D917000%25252C909703%25252C901802%25252C913101%25252C914102%2526algorithm%253Dthrottle-factor%2526itag%253D34%2526ip%253D50.0.0.0%2526burst%253D40%2526sver%253D3%2526signature%253D09FE3AC7146A5BCBAE0BDB7E19DD180B2971BF73.D93D68919C846A83A10971479CD039D204F6406F%2526source%253Dyoutube%2526expire%253D1334476230%2526key%253Dyt1%2526ipbits%253D8%2526factor%253D1.25%2526cp%253DU0hSSVRSVF9ISkNOMl9MTFhDOlV5MDVlQnY3b2c4%2526id%253D480734bd0082e944%2526px!%253Dhttp%253A%252F%252Fo-o.preferred.nuq04s10.v5.lscache4.c.youtube.com%26quality%3Dmedium%26fallback_host%')
         })
+
+        it('should facebook', function(){
+            encode.encodeBody('<script>,"src":"http:\\/\\/static.ak.fbcdn.net\\/rsrc.php\\/v1\\/yp\\/r\\/KzLCUEPU8Xq.css"}});' + 
+              'Bootloader.setResourceMap({"YMkqy":{"type":"js","src":"http:\\/\\/static.ak.fbcdn.net\\/rsrc.php\\/v1\\/yx\\/r\\/N-kcJF3mlg6.js"},"0gbVy":</script>')
+              .should.equal('<script>,"src":"https:\\/\\/nowall.be\\/rsrc.php\\/v1\\/yp\\/r\\/KzLCUEPU8Xq.css?px!=http:\\/\\/static.ak.fbcdn.net"}});' + 
+              'Bootloader.setResourceMap({"YMkqy":{"type":"js","src":"https:\\/\\/nowall.be\\/rsrc.php\\/v1\\/yx\\/r\\/N-kcJF3mlg6.js?px!=http:\\/\\/static.ak.fbcdn.net"},"0gbVy":</script>')
+        })
     });
 
     // describe('decodeQuery', function(){
