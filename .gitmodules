@@ -1,0 +1,3 @@
+[submodule "redisjar"]
+	path = redisjar
+	url = git://github.com/guileen/node-redisjar.git
