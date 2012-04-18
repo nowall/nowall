@@ -66,8 +66,9 @@ module.exports = function(creq, cres, sreq, sres, next, logger) {
 
       // var contentLength = Number(cres.headers['content-length']);
       var contentType = cres.headers['content-type'];
+      console.log(contentType);
       var charset = /charset=([\w\d\-]+)/.exec(contentType);
-      charset = charset && charset[1] || 'utf8';
+      charset = charset && charset[1] || 'ascii';
       var encoding;
       if ('ascii' === charset || 'utf8' === charset || 'utf-8' === charset) {
         encoding = charset;
