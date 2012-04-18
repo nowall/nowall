@@ -97,6 +97,7 @@ describe('encodev2', function(){
         it('should fix for dynamic', function() {
             encode.decodeUrl('https://ssl.nowall.be:3333/c/swift/en?px!=https://si0.twimg.com/bundle/settings.7ebb4b4bebfd3032a38dee89956030db.js')
               .should.equal('https://si0.twimg.com/c/swift/en/bundle/settings.7ebb4b4bebfd3032a38dee89956030db.js')
+            encode.decodeUrl('https://ssl.nowall.be/a/1334333797/?px!=https://si0.twimg.com/t1/css/t1_more.bundle.css').should.equal('https://si0.twimg.com/a/1334333797/t1/css/t1_more.bundle.css');
         })
     });
 
