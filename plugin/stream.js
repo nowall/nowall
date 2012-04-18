@@ -6,6 +6,8 @@ module.exports = function(creq, cres, sreq, sres, next, logger) {
   if(!useRaw) {
     delete cres.headers['content-length'];
   }
+  console.log('writing headers')
+  console.log(cres.headers)
   sres.writeHead(
     cres.statusCode,
     cres.headers
@@ -16,18 +18,18 @@ module.exports = function(creq, cres, sreq, sres, next, logger) {
   }
 
   var zipStream;
-  var headers = cres.headers;
+  var cresStream = cres;
 
   var contentEncoding = cres.headers['content-encoding'];
 
   switch (contentEncoding) {
     // or, just use zlib.createUnzip() to handle both cases
     case 'gzip':
-    cres = this.cres = cres.pipe(zlib.createGunzip());
+    cresStream = cres.pipe(zlib.createGunzip());
     zipStream = zlib.createGzip();
     break;
     case 'deflate':
-    cres = this.cres = cres.pipe(zlib.createInflate());
+    cresStream = cres.pipe(zlib.createInflate());
     zipStream = zlib.createDeflate();
     break;
     default:
@@ -37,7 +39,6 @@ module.exports = function(creq, cres, sreq, sres, next, logger) {
   }
 
   if(zipStream) {
-    cres.headers = headers;
     zipStream.pipe(sres);
     sres = this.sres = zipStream;
   }
@@ -47,17 +48,17 @@ module.exports = function(creq, cres, sreq, sres, next, logger) {
   bufferLenght = 0;
   body = '';
 
-  cres.on('error', function(err) {
+  cresStream.on('error', function(err) {
       logger.error(err);
       sres.end();
   });
 
-  cres.on('data', function(chunk) {
+  cresStream.on('data', function(chunk) {
       buffers.push(chunk);
       bufferLenght += chunk.length;
   });
 
-  cres.on('end', function() {
+  cresStream.on('end', function() {
       var buffer = new Buffer(bufferLenght);
       for (var i = 0, offset = 0; i < buffers.length; i++) {
         buffers[i].copy(buffer, offset);
