@@ -1,8 +1,10 @@
 var exports = module.exports = function(req, res, sreq, sres, next){
   var cookies = res.headers['set-cookie'];
   var options = sreq.options;
+  console.log('res.headers');
+  console.log(res.headers)
   if(cookies) {
-    res.headers['set-cookies'] = encodeCookies(cookies);
+    res.headers['set-cookie'] = encodeCookies(cookies);
     console.log('encodedCookies');
     console.log(res.headers['set-cookies']);
   }
@@ -51,6 +53,7 @@ var exports = module.exports = function(req, res, sreq, sres, next){
      }
      */
     if (domain) {
+      console.log(domain);
       encodedCookies = [
         cookie.replace(domain_pattern, function(full, prefix, domain, suffix) {
             // FIXME use a jar
