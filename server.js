@@ -67,9 +67,10 @@ var proxyv2 = require('./lib/proxyv2')(config.proxyOption);
 var block_bot = connect_block({agent: ['google', 'baidu'], text: 'Goodbye'});
 
 var appv2 = module.exports = connect()
-  .use(block_bot)
   .use(connect.favicon(__dirname + '/public/images/favicon.ico'))
   .use(connect.vhost('www.' + config.server, require('./appv2')))
+  .use(config.server, require('./appv2'))
+  .use(block_bot)
   .use(connect.vhost('ipn.' + config.server, require('./routes/ipn')))
 // v2 proxy
   .use(connect.vhost('ssl.' + config.server, proxyv2))
@@ -94,11 +95,12 @@ function redirectToHttps (req, res, next) {
 }
 
 var appv1 = connect()
-  .use(block_bot)
   .use(connect.favicon(__dirname + '/public/images/favicon.ico'))
   .use(connect.vhost('ipn.' + config.server, require('./routes/ipn')))
   .use(connect.vhost('v1.' + config.server, require('./app')))
   .use(redirectToHttps)
+  .use(connect.vhost(config.server, require('./app')))
+  .use(block_bot)
   .use(connect.vhost('*.' + config.server, proxyv1))
   .use(require('./app'));
 
