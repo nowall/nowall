@@ -2,15 +2,16 @@ var zlib = require('zlib')
   , util = require('util');
 
 module.exports = function(creq, cres, sreq, sres, next, logger) {
-  if(sres.isText) {
-    delete headers['content-length'];
+  var useRaw = !cres.isText || sreq.url.indexOf('pxraw=true') > 0
+  if(!useRaw) {
+    delete cres.headers['content-length'];
   }
   sres.writeHead(
     cres.statusCode,
     cres.headers
   );
   // if binary simply pipe cres
-  if(!cres.isText) {
+  if(useRaw) {
     return cres.pipe(sres);
   }
 
