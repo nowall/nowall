@@ -79,13 +79,15 @@ var appv2 = module.exports = connect()
   .use(require('./appv2'))
 
 function redirectToHttps (req, res, next) {
-  if(req.method === 'GET') {
+  if(req.method === 'GET' && req.headers.cookie.indexOf('nowall_version=2') >= 0) {
     var url = req.headers.host.replace(httpPortSuffix, httpsPortSuffix) + req.url;
     console.log(url)
     res.writeHead(302, {
         location: 'https://' + url
     });
     res.end();
+  } else {
+    next();
   }
 }
 
