@@ -39,8 +39,10 @@ var exports = module.exports = function(options) {
 
 }
 
+exports.headers = require('./headers');
 exports.stream = require('./stream');
 exports.youtube = require('./youtube');
 exports.twitter = require('./twitter');
+exports.cookie = require('./cookie');
 exports.ga = require('./ga');
 exports.bodyEncoder = require('./bodyencoder').bodyEncoder;

@@ -2,40 +2,22 @@ var zlib = require('zlib')
   , util = require('util');
 
 module.exports = function(creq, cres, sreq, sres, next, logger) {
-  var encoder = sreq.encoder;
-
-  var headers = encoder.encodeResponseHeaders(cres.headers, creq);
-
-  var contentType = cres.headers['content-type'];
-  var isText = contentType && /(text|javascript)/.test(contentType);
-  var isScript = contentType && /javascript/.test(contentType) ||
-                 (isText && ! /text\/(css|html)/.test(contentType)) ||
-                 /\.js(\?|#|$)/.test(creq.path);
-  var isStyle = contentType == 'text/css';
-  isText = isText || isScript;
-  logger.info('contentType:' + contentType + " isScript:" + isScript);
-  var contentEncoding = cres.headers['content-encoding'];
-  var contentLength = Number(cres.headers['content-length']);
-  var charset = /charset=([\w\d\-]+)/.exec(contentType);
-  charset = charset && charset[1] || 'utf8';
-  var encoding;
-  if ('ascii' === charset || 'utf8' === charset || 'utf-8' === charset) {
-    encoding = charset;
-  }else {
-    encoding = 'binary';
+  if(sres.isText) {
+    delete headers['content-length'];
   }
-
-  delete headers['content-length'];
   sres.writeHead(
     cres.statusCode,
-    headers
+    cres.headers
   );
   // if binary simply pipe cres
-  if(!isText) {
+  if(!cres.isText) {
     return cres.pipe(sres);
   }
 
   var zipStream;
+  var headers = cres.headers;
+
+  var contentEncoding = cres.headers['content-encoding'];
 
   switch (contentEncoding) {
     // or, just use zlib.createUnzip() to handle both cases
@@ -54,6 +36,7 @@ module.exports = function(creq, cres, sreq, sres, next, logger) {
   }
 
   if(zipStream) {
+    cres.headers = headers;
     zipStream.pipe(sres);
     sres = this.sres = zipStream;
   }
@@ -80,9 +63,17 @@ module.exports = function(creq, cres, sreq, sres, next, logger) {
         offset += buffers[i].length;
       }
 
-      cres.encoding = encoding;
-      cres.isScript = isScript;
-      cres.isStyle = isStyle;
+      // var contentLength = Number(cres.headers['content-length']);
+      var contentType = cres.headers['content-type'];
+      var charset = /charset=([\w\d\-]+)/.exec(contentType);
+      charset = charset && charset[1] || 'utf8';
+      var encoding;
+      if ('ascii' === charset || 'utf8' === charset || 'utf-8' === charset) {
+        encoding = charset;
+      }else {
+        encoding = 'binary';
+      }
+
       cres.body = buffer.toString(encoding);
 
       return next();

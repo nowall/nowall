@@ -37,6 +37,8 @@ var httpsPort = config.httpsPort
   ;
 
 var plugins = plugin()
+  .use(plugin.headers)
+  .use(plugin.cookie)
   .use(plugin.stream)
   .use(plugin.youtube)
   .use(plugin.twitter)
@@ -66,6 +68,7 @@ var block_bot = connect_block({agent: ['google', 'baidu'], text: 'Goodbye'});
 
 var appv2 = module.exports = connect()
   .use(block_bot)
+  .use(connect.favicon())
   .use(connect.vhost('www.' + config.server, require('./appv2')))
   .use(connect.vhost('ipn.' + config.server, require('./routes/ipn')))
 // v2 proxy
@@ -88,6 +91,7 @@ function redirectToHttps (req, res, next) {
 
 var appv1 = connect()
   .use(block_bot)
+  .use(connect.favicon())
   .use(connect.vhost('ipn.' + config.server, require('./routes/ipn')))
   .use(connect.vhost('v1.' + config.server, require('./app')))
   .use(redirectToHttps)
