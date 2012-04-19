@@ -5,15 +5,14 @@
   "background": {
     "scripts": ["encodev2.js", "background.js"]
   },
-  "icons": { "128": "nowall_128x128.png" },
+  "icons": { "128": "icons/nowall_128x128.png" },
   "options_page": "options.html",
   "permissions": [
     "tabs", "http://*/*", "https://*/*", "<all_urls>"
   ],
   "browser_action": {
-    "default_title": "NoWall this page",
-    "default_icon": "nowall_off_16x16.png"
+    "default_title": "NoWall",
+    "default_icon": "icons/nowall_off_16x16.png"
   },
-
   "manifest_version": 2
 }

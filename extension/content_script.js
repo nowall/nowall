@@ -1,13 +1,4 @@
-/*
- * Copyright (c) 2009 The Chromium Authors. All rights reserved.  Use of this
- * source code is governed by a BSD-style license that can be found in the
- * LICENSE file.
- */
-
-var additionalInfo = {
-  "title": document.title,
-  // "href": location.href,
-  "selection": window.getSelection().toString()
+var msg = {
 };
 
-chrome.extension.connect().postMessage(additionalInfo);
+chrome.extension.connect().postMessage(msg);
