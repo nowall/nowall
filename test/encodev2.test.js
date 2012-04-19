@@ -19,43 +19,43 @@ describe('encodev2', function(){
 
         it('should ?px!', function(){
             encode.encodeUrl('http://www.twitter.com').should.equal(
-              'https://nowall.be/?px!=http://www.twitter.com');
+              'https://nowall.be/?px!=www.twitter.com');
             encode.encodeUrl('://www.twitter.com').should.equal(
-              'https://nowall.be/?px!=http://www.twitter.com');
+              'https://nowall.be/?px!=www.twitter.com');
         })
 
         it('should encode ext', function(){
             encode.encodeUrl('https://t-img.t.cn/p/test.png')
-              .should.equal('https://nowall.be/p/test.png?px!=https://t-img.t.cn');
+              .should.equal('https://nowall.be/p/test.png?px!=https:t-img.t.cn');
         })
 
         // TODO should not encode empty string
 
         it('should encode relative path', function(){
-            encode.encodeUrl('/login').should.equal('/login?px!=https://test.com');
+            encode.encodeUrl('/login').should.equal('/login?px!=https:test.com');
         })
 
         it('should encode host', function(){
             // complex query
-            encode.encodeUrl('http://groups.google.com/?p1=v1&p2=v2').should.equal('https://nowall.be/?p1=v1&p2=v2&px!=http://groups.google.com');
+            encode.encodeUrl('http://groups.google.com/?p1=v1&p2=v2').should.equal('https://nowall.be/?p1=v1&p2=v2&px!=groups.google.com');
 
             encode.encodeUrl('http://hello.foo-bar.com.hk/path/to/path?p1=v1&p2=v2')
-              .should.equal('https://nowall.be/path/to/path?p1=v1&p2=v2&px!=http://hello.foo-bar.com.hk');
+              .should.equal('https://nowall.be/path/to/path?p1=v1&p2=v2&px!=hello.foo-bar.com.hk');
 
             // anchor
             encode.encodeUrl('http://test.com/?p1=v1&p2=v2#anchor')
-              .should.equal('https://nowall.be/?p1=v1&p2=v2&px!=http://test.com#anchor');
+              .should.equal('https://nowall.be/?p1=v1&p2=v2&px!=test.com#anchor');
 
             // path
             encode.encodeUrl('http://test.com/foo/bar.jpg#anchor')
-              .should.equal('https://nowall.be/foo/bar.jpg?px!=http://test.com#anchor');
+              .should.equal('https://nowall.be/foo/bar.jpg?px!=test.com#anchor');
             // whiteList
             encode.encodeUrl('http://github.com').should.equal('http://github.com');
             encode.encodeUrl('http://guileen.github.com').should.equal('http://guileen.github.com');
         })
 
         it('should no more path', function(){
-            // FIXME https://ssl.nowall.be:3333/gb/images/b_8d5afc09.png?px!=http://ssl.gstatic.com/gb/images/b_8d5afc09.png
+            // FIXME https://ssl.nowall.be:3333/gb/images/b_8d5afc09.png?px!=ssl.gstatic.com/gb/images/b_8d5afc09.png
         })
 
         it('should not encode data:', function(){
@@ -63,41 +63,41 @@ describe('encodev2', function(){
         })
 
         it('should not unlimited parse', function(){
-            encode.encodeUrl(encode.encodeUrl('http://twitter.com')).should.equal('https://nowall.be/?px!=http://twitter.com');
+            encode.encodeUrl(encode.encodeUrl('http://twitter.com')).should.equal('https://nowall.be/?px!=twitter.com');
         })
     });
 
     describe('decodeUrl', function() {
         it('should decode extra params of ajax', function() {
-            encode.decodeUrl('/?px!=http://twitter.com&p1=v1&p2=v2')
+            encode.decodeUrl('/?px!=twitter.com&p1=v1&p2=v2')
               .should.equal('http://twitter.com/?p1=v1&p2=v2');
         });
 
         it('should match &px!', function(){
-            encode.decodeUrl('/p/to/p?p1=v1&px!=https://twitter.com&p2=v2#anchor')
+            encode.decodeUrl('/p/to/p?p1=v1&px!=https:twitter.com&p2=v2#anchor')
               .should.equal('https://twitter.com/p/to/p?p1=v1&p2=v2#anchor');
         });
 
         it('should match referer', function() {
-            encode.decodeUrl('/foo?p1=v1#foo', 'https://nowall.be/?px!=https://t.cn#anchor')
+            encode.decodeUrl('/foo?p1=v1#foo', 'https://nowall.be/?px!=https:t.cn#anchor')
               .should.equal('https://t.cn/foo?p1=v1#foo');
             should.not.exist(encode.decodeUrl('/abcde?q=v#anchor'));
         });
 
         it('should parse root url', function() {
-            encode.decodeUrl('https://ssl.nowall.be/?px!=http://test.com')
+            encode.decodeUrl('https://ssl.nowall.be/?px!=test.com')
               .should.equal('http://test.com/');
         })
 
         it('should parse full url', function() {
-            encode.decodeUrl('https://nowall.be/foo?p1=v1&px!=http://t.cn#anchor')
+            encode.decodeUrl('https://nowall.be/foo?p1=v1&px!=t.cn#anchor')
               .should.equal('http://t.cn/foo?p1=v1#anchor');
         })
 
         it('should fix for dynamic', function() {
-            encode.decodeUrl('https://ssl.nowall.be:3333/c/swift/en?px!=https://si0.twimg.com/bundle/settings.7ebb4b4bebfd3032a38dee89956030db.js')
+            encode.decodeUrl('https://ssl.nowall.be:3333/c/swift/en?px!=https:si0.twimg.com/bundle/settings.7ebb4b4bebfd3032a38dee89956030db.js')
               .should.equal('https://si0.twimg.com/c/swift/en/bundle/settings.7ebb4b4bebfd3032a38dee89956030db.js')
-            encode.decodeUrl('https://ssl.nowall.be/a/1334333797/?px!=https://si0.twimg.com/t1/css/t1_more.bundle.css').should.equal('https://si0.twimg.com/a/1334333797/t1/css/t1_more.bundle.css');
+            encode.decodeUrl('https://ssl.nowall.be/a/1334333797/?px!=https:si0.twimg.com/t1/css/t1_more.bundle.css').should.equal('https://si0.twimg.com/a/1334333797/t1/css/t1_more.bundle.css');
         })
     });
 
@@ -113,7 +113,7 @@ describe('encodev2', function(){
     describe('encodeStyle', function(){
         it('should relative url', function(){
             encode.encodeStyle('.img{ background: url(../imgs/foo.png)')
-              .should.equal('.img{ background: url(../imgs/foo.png?px!=https://test.com)');
+              .should.equal('.img{ background: url(../imgs/foo.png?px!=https:test.com)');
         })
     })
 
@@ -121,13 +121,13 @@ describe('encodev2', function(){
 
         it('should handle href link', function() {
             encode.encodeBody('<p><a href="../login">test</a><a href="http://www.test.com/test">full</a>')
-              .should.equal('<p><a href="../login?px!=https://test.com">test</a><a href="https://nowall.be/test?px!=http://www.test.com">full</a>');
+              .should.equal('<p><a href="../login?px!=https:test.com">test</a><a href="https://nowall.be/test?px!=www.test.com">full</a>');
 
         });
 
         it('should handle none scheme', function() {
             var encodedBody = encode.encodeBody('blabla<script id="www-core-js" src="://s.ytimg.com/yt/jsbin/www-core-vflb497eV.js"></script>blabla');
-            encodedBody.should.equal('blabla<script id="www-core-js" src="https://nowall.be/yt/jsbin/www-core-vflb497eV.js?px!=http://s.ytimg.com"></script>blabla')
+            encodedBody.should.equal('blabla<script id="www-core-js" src="https://nowall.be/yt/jsbin/www-core-vflb497eV.js?px!=s.ytimg.com"></script>blabla')
         })
 
         it('should on correct postion', function() {
@@ -136,19 +136,19 @@ describe('encodev2', function(){
         })
         it('should script', function(){
             var encodedBody = encode.encodeBody('<script>var x="douban.com";</script><a href="http://www.douban.com">www.douban.com</a><cite>www.douban.com/<b>test</b>/</cite><script type="text/javascript">var x="douban.com";\nl"api":"http:\\/\\/a2.twimg.com\\/a\\/1302888170\\/javascripts\\/api.bundle.js", \nhostname.match(/(^(www|api)\\.)?twitter\\.com$/)</script>', false)
-            encodedBody.should.equal('<script>var x="douban.com";</script><a href="https://nowall.be/?px!=http://www.douban.com">www.douban.com</a><cite>www.douban.com/<b>test</b>/</cite><script type="text/javascript">var x="douban.com";\nl"api":"https:\\/\\/nowall.be\\/a\\/1302888170\\/javascripts\\/api.bundle.js?px!=http:\\/\\/a2.twimg.com", \nhostname.match(/(^(www|api)\\.)?twitter\\.com$/)</script>')
+            encodedBody.should.equal('<script>var x="douban.com";</script><a href="https://nowall.be/?px!=www.douban.com">www.douban.com</a><cite>www.douban.com/<b>test</b>/</cite><script type="text/javascript">var x="douban.com";\nl"api":"https:\\/\\/nowall.be\\/a\\/1302888170\\/javascripts\\/api.bundle.js?px!=a2.twimg.com", \nhostname.match(/(^(www|api)\\.)?twitter\\.com$/)</script>')
         })
 
         it('should css', function() {
             var encodedBody = encode.encodeBody('<link type="text/css" rel="stylesheet" href="http://static.ak.fbcdn.net/rsrc.php/v1/y2/r/8Sr4ddHR5zZ.css" />', false);
-            encodedBody.should.equal('<link type="text/css" rel="stylesheet" href="https://nowall.be/rsrc.php/v1/y2/r/8Sr4ddHR5zZ.css?px!=http://static.ak.fbcdn.net" />')
+            encodedBody.should.equal('<link type="text/css" rel="stylesheet" href="https://nowall.be/rsrc.php/v1/y2/r/8Sr4ddHR5zZ.css?px!=static.ak.fbcdn.net" />')
         })
 
         it('should stylesheet', function(){
             encode.encodeBody(
               '<style id="">\n.foo{ background-image: url(https://twimg0-a.akamaihd.net/images/themes/theme1/bg.png); }\n</style>')
               .should.equal(
-              '<style id="">\n.foo{ background-image: url(https://nowall.be/images/themes/theme1/bg.png?px!=https://twimg0-a.akamaihd.net); }\n</style>')
+              '<style id="">\n.foo{ background-image: url(https://nowall.be/images/themes/theme1/bg.png?px!=https:twimg0-a.akamaihd.net); }\n</style>')
         })
 
         it('should youtube', function() {
@@ -163,7 +163,7 @@ describe('encodev2', function(){
             encode.encodeBody(script, true).should.equal(script);
 
             script = '{Kg("https://apis.google.com/js/plusone.js",s(this.Pj,this))};';
-            encode.encodeBody(script, true).should.equal('{Kg("https://nowall.be/js/plusone.js?px!=https://apis.google.com",s(this.Pj,this))};');
+            encode.encodeBody(script, true).should.equal('{Kg("https://nowall.be/js/plusone.js?px!=https:apis.google.com",s(this.Pj,this))};');
 
             // script = 'url_encoded_fmt_stream_map=url%3Dhttp%253A%252F%252Fo-o.preferred.nuq04s10.v5.lscache4.c.youtube.com%252Fvideoplayback%253Fupn%253D6i66J8nCUTc%2526sparams%253Dalgorithm%25252Cburst%25252Ccp%25252Cfactor%25252Cid%25252Cip%25252Cipbits%25252Citag%25252Csource%25252Cupn%25252Cexpire%2526fexp%253D917000%25252C909703%25252C901802%25252C913101%25252C914102%2526algorithm%253Dthrottle-factor%2526itag%253D34%2526ip%253D50.0.0.0%2526burst%253D40%2526sver%253D3%2526signature%253D09FE3AC7146A5BCBAE0BDB7E19DD180B2971BF73.D93D68919C846A83A10971479CD039D204F6406F%2526source%253Dyoutube%2526expire%253D1334476230%2526key%253Dyt1%2526ipbits%253D8%2526factor%253D1.25%2526cp%253DU0hSSVRSVF9ISkNOMl9MTFhDOlV5MDVlQnY3b2c4%2526id%253D480734bd0082e944%26quality%3Dmedium%26fallback_host%';
             // encode.encodeBody(script, true).should.equal('url_encoded_fmt_stream_map=url%3Dhttps%253A%252F%252Fnowall.be%252Fvideoplayback%253Fupn%253D6i66J8nCUTc%2526sparams%253Dalgorithm%25252Cburst%25252Ccp%25252Cfactor%25252Cid%25252Cip%25252Cipbits%25252Citag%25252Csource%25252Cupn%25252Cexpire%2526fexp%253D917000%25252C909703%25252C901802%25252C913101%25252C914102%2526algorithm%253Dthrottle-factor%2526itag%253D34%2526ip%253D50.0.0.0%2526burst%253D40%2526sver%253D3%2526signature%253D09FE3AC7146A5BCBAE0BDB7E19DD180B2971BF73.D93D68919C846A83A10971479CD039D204F6406F%2526source%253Dyoutube%2526expire%253D1334476230%2526key%253Dyt1%2526ipbits%253D8%2526factor%253D1.25%2526cp%253DU0hSSVRSVF9ISkNOMl9MTFhDOlV5MDVlQnY3b2c4%2526id%253D480734bd0082e944%2526px!%253Dhttp%253A%252F%252Fo-o.preferred.nuq04s10.v5.lscache4.c.youtube.com%26quality%3Dmedium%26fallback_host%')
@@ -172,8 +172,8 @@ describe('encodev2', function(){
         it('should facebook', function(){
             encode.encodeBody('<script>,"src":"http:\\/\\/static.ak.fbcdn.net\\/rsrc.php\\/v1\\/yp\\/r\\/KzLCUEPU8Xq.css"}});' + 
               'Bootloader.setResourceMap({"YMkqy":{"type":"js","src":"http:\\/\\/static.ak.fbcdn.net\\/rsrc.php\\/v1\\/yx\\/r\\/N-kcJF3mlg6.js"},"0gbVy":</script>')
-              .should.equal('<script>,"src":"https:\\/\\/nowall.be\\/rsrc.php\\/v1\\/yp\\/r\\/KzLCUEPU8Xq.css?px!=http:\\/\\/static.ak.fbcdn.net"}});' + 
-              'Bootloader.setResourceMap({"YMkqy":{"type":"js","src":"https:\\/\\/nowall.be\\/rsrc.php\\/v1\\/yx\\/r\\/N-kcJF3mlg6.js?px!=http:\\/\\/static.ak.fbcdn.net"},"0gbVy":</script>')
+              .should.equal('<script>,"src":"https:\\/\\/nowall.be\\/rsrc.php\\/v1\\/yp\\/r\\/KzLCUEPU8Xq.css?px!=static.ak.fbcdn.net"}});' + 
+              'Bootloader.setResourceMap({"YMkqy":{"type":"js","src":"https:\\/\\/nowall.be\\/rsrc.php\\/v1\\/yx\\/r\\/N-kcJF3mlg6.js?px!=static.ak.fbcdn.net"},"0gbVy":</script>')
         })
     });
 
@@ -208,7 +208,7 @@ describe('encodev2', function(){
 
         it('should return https://t.com', function() {
             var opt = encode.decodeRequestV2({
-                url: '/p/2/p?px!=https://t.com'
+                url: '/p/2/p?px!=https:t.com'
             });
             opt.host.should.equal('t.com');
             opt.isSecure.should.be.true;
@@ -220,7 +220,7 @@ describe('encodev2', function(){
             var opt = encode.decodeRequestV2({
                 url: '/path?query#anchor'
               , headers: {
-                  referer: 'https://nowall.be/refpath?px!=http://t.com#anchor'
+                  referer: 'https://nowall.be/refpath?px!=t.com#anchor'
                 }
             })
             opt.host.should.equal('t.com');
@@ -235,14 +235,14 @@ describe('encodev2', function(){
             var res = encode.encodeResponseHeaders({
                 location: 'http://google.com/search?q=test'
             });
-            res.location.should.equal('https://nowall.be/search?q=test&px!=http://google.com')
+            res.location.should.equal('https://nowall.be/search?q=test&px!=google.com')
         })
 
         it('should parse relative redirection', function() {
             var res = encode.encodeResponseHeaders({
                 location: '/j?k='
               });
-            res.location.should.equal('/j?k=&px!=https://test.com')
+            res.location.should.equal('/j?k=&px!=https:test.com')
         });
     })
 
