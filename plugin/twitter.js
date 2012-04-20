@@ -1,5 +1,9 @@
 var exports = module.exports = function(req, res, sreq, sres, next){
   if(req.host.indexOf('twitter.com') >=0) {
+    if(!req.isSecure) {
+      res.body = '<script>location.href = "https://twitter.com"</script>'
+      return next();
+    }
     // &quot;url&quot;:&quot;http:\/\/t.co\/7zJEGfyo&quot;
     res.body = res.body.replace(/http:\\\/\\\/t.co\\\/[\w\d]+/ig, function(path) {
         return sreq.encoder.encodeUrl(path.replace(/\\\//g, '/')).replace(/\//g, '\\/');
