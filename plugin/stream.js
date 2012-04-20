@@ -2,7 +2,7 @@ var zlib = require('zlib')
   , util = require('util');
 
 module.exports = function(creq, cres, sreq, sres, next, logger) {
-  var useRaw = !cres.isText || sreq.url.indexOf('pxraw=true') > 0
+  var useRaw = !cres.isText || sreq.url.indexOf('pxraw=true') > 0 || cres.isScript;
   if(!useRaw) {
     delete cres.headers['content-length'];
   }
