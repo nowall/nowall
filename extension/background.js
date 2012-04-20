@@ -14,7 +14,6 @@ function executeNoWall(tab, info) {
   } else {
     toUrl = encoder.encodeUrl(tab.url);
   }
-  console.log('update url %s to %s', tab.url, toUrl);
   chrome.tabs.update(tab.id, {
       url: toUrl
   })
@@ -50,14 +49,13 @@ function updateTab(tab) {
     console.log('catch error')
     executeNoWall(tab);
   }
-  chrome.pageAction.show(tab.id);
+  // chrome.pageAction.show(tab.id);
 }
 
 // Called when the user clicks on the browser action icon.
 chrome.browserAction.onClicked.addListener(function(tab) {
     if (tab.url.indexOf("http:") != 0 &&
       tab.url.indexOf("https:") != 0) {
-      console.log(tab.url);
       chrome.tabs.update(tab.id, {url: 'https://nowall.be'})
     } else {
       executeNoWall(tab);
