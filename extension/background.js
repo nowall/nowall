@@ -1,6 +1,6 @@
 var encoder = encoderv2({
-    baseURL: 'https://ssl.nowall.be:3333'
-  , serverAndPort: 'ssl.nowall.be:3333'
+    baseURL: 'https://ssl.nowall.be'
+  , serverAndPort: 'ssl.nowall.be'
   , whiteList: ['github.com', 'plusone.google.com']
 });
 
@@ -73,9 +73,9 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     updateIcon(tab);
     updateTab(tab);
     if(changeInfo.status == 'complete') {
-      chrome.tabs.executeScript(tabId, {
-          file: 'content_script.js'
-      })
+      // chrome.tabs.executeScript(tabId, {
+      //     file: 'content_script.js'
+      // })
     }
 })
 
