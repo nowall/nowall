@@ -22,6 +22,8 @@ describe('encodev2', function(){
               'https://nowall.be/?px!=www.twitter.com');
             encode.encodeUrl('://www.twitter.com').should.equal(
               'https://nowall.be/?px!=www.twitter.com');
+            encode.encodeUrl('//www.twitter.com').should.equal(
+              'https://nowall.be/?px!=www.twitter.com');
         })
 
         it('should encode ext', function(){
@@ -124,6 +126,11 @@ describe('encodev2', function(){
               .should.equal('<p><a href="../login?px!=https:test.com">test</a><a href="https://nowall.be/test?px!=www.test.com">full</a>');
 
         });
+
+        it('should handle href no scheme', function() {
+            encode.encodeBody("<script src='//www.blogblog.com/dynamicviews/5490e68b8618e708/js/common.js' type='text/javascript'></script>")
+              .should.equal("<script src='https://nowall.be/dynamicviews/5490e68b8618e708/js/common.js?px!=www.blogblog.com' type='text/javascript'></script>")
+        })
 
         it('should handle none scheme', function() {
             var encodedBody = encode.encodeBody('blabla<script id="www-core-js" src="://s.ytimg.com/yt/jsbin/www-core-vflb497eV.js"></script>blabla');
