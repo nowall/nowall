@@ -113,6 +113,8 @@ describe('encodev2', function(){
         it('should not break syntax', function() {
             encode.encodeScript('{tag:Un,attr:G,attrTest:/\/www.youtube.com\//,replace:Xt})')
               .should.equal('{tag:Un,attr:G,attrTest:/\/www.youtube.com\//,replace:Xt})')
+            encode.encodeScript(',vd="</a>",wd="<a href=",xd="<br/>"')
+              .should.equal(',vd="</a>",wd="<a href=",xd="<br/>"');
         })
 
     });
