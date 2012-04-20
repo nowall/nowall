@@ -6,6 +6,7 @@ var exports = module.exports = function(req, res, sreq, sres, next){
     })
 
     res.body = res.body.replace(/document.domain\s*=\s*['"].*['"];?/ig, '');
+    res.isScript = false;
   }
   else if(req.host.indexOf('akamaihd.net') >= 0) {
     // c/phoenix/en/bundle/t1-hogan-core.f760c184d1eaaf1cf27535473a7306ef.js
@@ -18,6 +19,7 @@ var exports = module.exports = function(req, res, sreq, sres, next){
     , ';if(this.methodName.match(/.*px!=.*/)) ' + 
       'this.methodName = this.methodName.replace(/.px!=.*$/, "");' +
       'var d=twttr.anywhere.api.endpoints[this.methodName];')
+    res.isScript = false;
   }
   next();
 }

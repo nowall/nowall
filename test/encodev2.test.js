@@ -110,6 +110,11 @@ describe('encodev2', function(){
               .should.equal('/*\n* http://test.com/license */window.foo=function(a,b,c)')
         })
 
+        it('should not break syntax', function() {
+            encode.encodeScript('{tag:Un,attr:G,attrTest:/\/www.youtube.com\//,replace:Xt})')
+              .should.equal('{tag:Un,attr:G,attrTest:/\/www.youtube.com\//,replace:Xt})')
+        })
+
     });
 
     describe('encodeStyle', function(){
