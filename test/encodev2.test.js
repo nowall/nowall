@@ -31,6 +31,11 @@ describe('encodev2', function(){
               .should.equal('https://nowall.be/p/test.png?px!=https:t-img.t.cn');
         })
 
+        it('should not encode anchror', function() {
+            encode.encodeBody('<a href="/#!">')
+              .should.equal('<a href="/#!"')
+        })
+
         // TODO should not encode empty string
 
         it('should encode relative path', function(){
