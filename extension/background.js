@@ -7,13 +7,23 @@ var encoder = encoderv2({
 function executeNoWall(tab, info) {
   var status = getStatus(tab);
   var toUrl;
+  console.log('enableRaw %s', window.localStorage.enableRaw);
+  console.log('status %s', status);
   if(status == 'on') {
-    toUrl = tab.url.replace(/(#|$)/, '&pxraw=true\1');
+    console.log('enableRaw %s', window.localStorage.enableRaw);
+    if(window.localStorage.enableRaw == 'yes') {
+      toUrl = tab.url.replace(/(#|$)/, '&pxraw=true\1');
+      console.log('replace raw %s', toUrl)
+    } else {
+      toUrl = encoder.decodeUrl(tab.url);
+      console.log('decode url %s', toUrl)
+    }
   } else if(status == 'raw') {
     toUrl = encoder.decodeUrl(tab.url.replace('&pxraw=true', ''));
   } else {
     toUrl = encoder.encodeUrl(tab.url);
   }
+  console.log('toUrl %s', toUrl)
   chrome.tabs.update(tab.id, {
       url: toUrl
   })
