@@ -64,7 +64,7 @@ var proxyv1 = global.proxy = require('./lib/proxy')(config.proxyOption);
 
 var proxyv2 = require('./lib/proxyv2')(config.proxyOption);
 
-var block_bot = connect_block({agent: ['google', 'baidu'], text: 'Goodbye'});
+var block_bot = connect_block({agent: ['google', 'baidu', /.*bot.*/], text: 'Goodbye'});
 
 var appv2 = module.exports = connect()
   .use(connect.favicon(__dirname + '/public/images/favicon.ico'))
