@@ -46,4 +46,5 @@ exports.youtube = require('./youtube');
 exports.twitter = require('./twitter');
 exports.cookie = require('./cookie');
 exports.ga = require('./ga');
+exports.gad = require('./gad');
 exports.bodyEncoder = require('./bodyencoder').bodyEncoder;

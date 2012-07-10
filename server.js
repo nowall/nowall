@@ -6,6 +6,7 @@ var http = require('http')
   , config = require('./config')
   , log4js = require('log4js')
   , plugin = require('./plugin')
+  , whitelist = require('./conf/whitelist')
   ;
 
 // apply settings
@@ -40,9 +41,10 @@ var plugins = plugin()
   .use(plugin.headers)
   .use(plugin.cookie)
   .use(plugin.stream)
-  .use(plugin.youtube)
+  // .use(plugin.youtube)
   .use(plugin.twitter)
   .use(plugin.ga)
+  .use(plugin.gad)
   .use(plugin.bodyEncoder) // encodeBody and write to response
 
 config.proxyOption = {
@@ -57,8 +59,11 @@ config.proxyOption = {
   , baseURL: httpsURL
   , compress: config.compress
   , logger: config.logger
+  , whiteList: whitelist.whitelist
   , plugins: plugins
 }
+
+console.log(config.proxyOption.whiteList)
 
 var proxyv1 = global.proxy = require('./lib/proxy')(config.proxyOption);
 
