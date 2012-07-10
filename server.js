@@ -3,7 +3,7 @@ var http = require('http')
   , fs = require('fs')
   , connect = require('connect')
   , connect_block = require('connect-block')
-  , config = require('./settings')
+  , config = require('./config')
   , log4js = require('log4js')
   , plugin = require('./plugin')
   ;

@@ -1,5 +1,5 @@
 var express = require('express'),
-    config = require('./settings'),
+    config = require('./config'),
     querystring = require('querystring'),
     db = require('./lib/store'),
     app = module.exports = express.createServer();

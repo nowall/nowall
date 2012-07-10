@@ -1,5 +1,5 @@
 var express = require('express'),
-    config = require('./settings'),
+    config = require('./config'),
     querystring = require('querystring'),
     db = require('./lib/store'),
     encode = require('./lib/encodev2')(config.proxyOption),
