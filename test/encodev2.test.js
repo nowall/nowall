@@ -268,6 +268,15 @@ describe('encodev2', function(){
               });
             res.location.should.equal('/j?k=&px!=https:test.com')
         });
+
+        describe('encodeCookie', function() {
+            it('should expire in 1 week', function() {
+                var cookie = 'remember_me=no; domain=iteye.com; path=/; expires=Sat, 12-Jan-2013 19:34:12 GMT'
+                console.log(encode.encodeCookie(cookie))
+                cookie = '_javaeye3_session_=BAh7CDoMdXNlcl9pZGkCzdA6D3Nlc3Npb25faWQiJWYxZDU2ZjFjYzM5MzJmMWJkNDg1Y2VkNDQ3MTlkNDgzOhBfY3NyZl90b2tlbiIxd3kvSlAwekJYNUxvblIxaTk4WCtOaXJFSDlmYVpUNGhFbzZHZlVWajVTND0%3D--f3ad92b2936484513d1b6a172f17a1cc1517d116; domain=.iteye.com; path=/; HttpOnly'
+                console.log(encode.encodeCookie(cookie));
+            })
+        })
     })
 
 })
