@@ -38,6 +38,8 @@ app.dynamicHelpers({
 app.helpers({
     config : config
   , dev : app.settings.env == 'development'
+  , base_url: ''
+  , scheme: 'http'
 });
 
 app.get('/', function(req, res) {

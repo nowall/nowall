@@ -7,6 +7,9 @@ var http = require('http')
   , log4js = require('log4js')
   , plugin = require('./plugin')
   , whitelist = require('./conf/whitelist')
+  , utils = require('./lib/utils')
+  , startWith = utils.startWith
+  , endWith = utils.endWith
   ;
 
 // apply settings
@@ -73,16 +76,18 @@ var block_bot = connect_block({agent: ['google', 'baidu', /.*bot.*/], text: 'Goo
 
 var appv2 = module.exports = connect()
   .use(connect.favicon(__dirname + '/public/images/favicon.ico'))
-  .use(connect.vhost('www.' + config.server, require('./appv2')))
-  .use(config.server, require('./appv2'))
+  .use(function(req, res, next) {
+    if(startWith(req.url, '/here!/')) {
+      req.url = req.url.substr(6);
+      require('./appv2').handle(req, res);
+    }else {
+      next();
+    }
+  })
   .use(block_bot)
-  .use(connect.vhost('ipn.' + config.server, require('./routes/ipn')))
-// v2 proxy
-  .use(connect.vhost('ssl.' + config.server, proxyv2))
-// v1 proxy
-  .use(connect.vhost('*.' + config.server, proxyv1))
-// home
+  .use(proxyv2)
   .use(require('./appv2'))
+  ;
 
 function redirectToHttps (req, res, next) {
   if(req.method === 'GET' &&

@@ -39,18 +39,20 @@ app.dynamicHelpers({
 app.helpers({
     config : config
   , dev : app.settings.env == 'development'
+  , base_url: '/here!'
+  , scheme: 'https'
 });
 
-app.get('/', function(req, res) {
-    res.redirect('/here');
-});
-
-app.get('/here', function(req, res) {
+function homepage(req, res) {
     res.render('index', {
         title: 'No WALL be here'
       , version: 'v2'
     });
-});
+}
+
+app.get('/', homepage);
+
+app.get('/here', homepage);
 
 app.post('/donation/success', function(req, res) {
     res.render('donation_success', {
@@ -114,7 +116,7 @@ app.get('/search', function(req, res) {
         if (m && (m[1] || ((_ref = m[3]) === 'com' || _ref === 'org' || _ref === 'edu' || _ref === 'net'))) {
           url = (m[1] || 'http://') + m[2];
         } else {
-          url = 'http://www.google.com/search?sourceid=chrome&ie=UTF-8&' + querystring.stringify({
+          url = 'http://www.google.com.hk/search?sourceid=chrome&ie=UTF-8&' + querystring.stringify({
               q: q
           });
         }
