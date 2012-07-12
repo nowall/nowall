@@ -9,9 +9,9 @@
     p
       button.button.primary.big(type='submit') NoWALL
 
-  .donation
-    p Nowall需要你的支持
-    !=partial('donation')
+  //- .donation
+  //-   p Nowall需要你的支持
+  //-   !=partial('donation')
 
   //- .footer
   //-   a(href="http://www.bullogger.com/") 牛博
@@ -47,12 +47,12 @@
     <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
 
 #autocomplete
-  .option.focus popup
-  .option popup
-  .option popup
-  .option popup
-  .option popup
-  .option popup
+  //- .option.focus popup
+  //- .option popup
+  //- .option popup
+  //- .option popup
+  //- .option popup
+  //- .option popup
 
 script
   var getAbsolutOffset = function (obj) {
@@ -76,7 +76,7 @@ script
 
   var q=$('q'),
     offset = getAbsolutOffset(q);
-  autocomplete = $('autocomplete')
+  var autocomplete = $('autocomplete')
   autocomplete.style.left = offset.x + 'px'
   autocomplete.style.top = (offset.y + q.offsetHeight) + 'px'
   autocomplete.style.width = q.offsetWidth + 'px'
