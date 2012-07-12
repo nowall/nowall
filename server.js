@@ -28,6 +28,7 @@ config.searchUrl = "" + config.scheme + "://search." + config.serverAndPort;
 config.baseUrl = "" + config.scheme + "://" + config.serverAndPort;
 
 log4js.addAppender(log4js.fileAppender(config.logfile));
+log4js.setGlobalLogLevel(config.logLevel || 'WARN')
 config.logger = log4js;
 
 

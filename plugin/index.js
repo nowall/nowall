@@ -25,7 +25,7 @@ var exports = module.exports = function(options) {
           throw new Error('no plugin at ' + index);
         }
 
-        console.log('executing:plugin:%d', index);
+        logger.debug('executing:plugin:%d', index);
         plugin.call(ctx, ctx.creq, ctx.cres, ctx.sreq, ctx.sres, next, logger);
       }
 
