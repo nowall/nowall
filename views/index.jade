@@ -3,7 +3,7 @@
     img(src='#{base_url}/images/nowall.png')
   //- h3 <font color='red'>NoWALL</font><font color='gray'>.</font>be<font color='gray'>/</font><font color='green'>here</font>
 
-  form(action='#{base_url}/search', method='GET')
+  form(name='search', action='#{base_url}/search', method='GET', onsubmit='return search_submit(this);')
     p
       input#q(name='q', autofocus, required, placeholder='No wall be here')
     p
@@ -57,6 +57,33 @@
   //- .option popup
 
 script
+  function search_submit(){
+    var q = document.getElementById('q');
+    var url = document.forms['search'].action;
+    location.href = url + '?q=' + encodeURIComponent(encodeX(q.value));
+    return false;
+  }
+
+  var NW_BASE_MAP = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+      X_ENCODE_MAP = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+  function replaceEncode (str, base_map, encode_map) {
+      var result = '';
+      for (var i = 0, len = str.length; i < len; i++) {
+        var index = base_map.indexOf(str[i]);
+        if (index >= 0) {
+          result += encode_map[index];
+        }else {
+          result += str[i];
+        }
+      }
+      return result;
+    }
+
+  function encodeX (str) {
+    return replaceEncode(str, NW_BASE_MAP, X_ENCODE_MAP)
+  }
+
   var getAbsolutOffset = function (obj) {
       var left, top;
       left = top = 0;

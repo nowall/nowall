@@ -2,6 +2,7 @@ var express = require('express'),
     config = require('./config'),
     querystring = require('querystring'),
     db = require('./lib/store'),
+    utils = require('./lib/utils'),
     encode = require('./lib/encodev2')(config.proxyOption),
     app = module.exports = express.createServer();
 
@@ -111,6 +112,7 @@ app.post('/signup', function(req, res) {
 app.get('/search', function(req, res) {
     return req.on('end', function() {
         var m, q, url, _ref;
+        q = utils.decodeX(q);
         q = req.query.q.trim();
         m = q.match(/^(https?:\/\/)?([\w\d][\.\w\d\-]+\.(\w{2,4})(\.\w{2})?\/?\S*)$/);
         if (m && (m[1] || ((_ref = m[3]) === 'com' || _ref === 'org' || _ref === 'edu' || _ref === 'net'))) {

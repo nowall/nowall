@@ -2,6 +2,7 @@ var express = require('express'),
     config = require('./config'),
     querystring = require('querystring'),
     db = require('./lib/store'),
+    utils = require('./lib/utils'),
     app = module.exports = express.createServer();
 
 var RedisStore = require('connect-redis')(express);
@@ -108,9 +109,9 @@ app.post('/signup', function(req, res) {
 });
 
 app.get('/search', function(req, res) {
-    return req.on('end', function() {
         var m, q, url, _ref;
         q = req.query.q.trim();
+        q = utils.decodeX(q);
         m = q.match(/^(https?:\/\/)?([\w\d][\.\w\d\-]+\.(\w{2,4})(\.\w{2})?\/?\S*)$/);
         if (m && (m[1] || ((_ref = m[3]) === 'com' || _ref === 'org' || _ref === 'edu' || _ref === 'net'))) {
           url = (m[1] || 'http://') + m[2];
@@ -120,7 +121,6 @@ app.get('/search', function(req, res) {
           });
         }
         return res.redirect(global.proxy.encodeLocation(url));
-    });
 });
 
 if (!module.parent) {
