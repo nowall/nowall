@@ -1,27 +1,28 @@
 var whitelist = exports.whitelist = [
-  "github.com"
-, "google-analytics.com"
-, "googlesyndication.com"
-, "doubleclick.net"
-, "slidesharecdn.com"
-, "linkedin.com"
-, "apis.google.com"
-, "cn"
-, "weibo.com"
-]
+  // [domain, supportHTTPS]
+  ["github.com", 1]
+, ["google-analytics.com", 1]
+, ["googlesyndication.com", 1]
+, ["doubleclick.net", 1 ]
+, ["slidesharecdn.com", 1]
+  // , "images.slidesharecdn.com"
+  // , "public.slidesharecdn.com"
+, ["linkedin.com", 1]
+, ["apis.google.com", 1]
+, ["cn", 0]
+, ["weibo.com", 0]
+];
 
-var dns = require('dns');
+exports.updateDomain =function(domain, url) {
+  // var dns = require('dns');
+  // // http://ip-to-country.webhosting.info/book/print/5
+  // dns.resolve4(domain, function(err, addresses) {
+  //     // check ip, add to redis
+  // });
+  // call api from SAE. check ip from china
+  // auto update PAC file
+}
 
-exports.inWhiteList =function(domain) {
-  for(var i = 0; i < whiteList.length; i ++ ) {
-      var w = whiteList[i];
-      var domain = parts.domain;
-      if(domain.lastIndexOf(w) == domain.length - w.length)
-        return true;
-  }
-
-  // http://ip-to-country.webhosting.info/book/print/5
-  dns.resolve4(domain, function(err, addresses) {
-
-  });
+exports.loadWhiteList = function() {
+  // redisClient.get
 }

@@ -2,7 +2,7 @@ var should = require('should')
   , options = {
       baseURL:'https://nowall.be'
     , serverAndPort: 'nowall.be'
-    , whiteList: ['github.com', 'plusone.google.com'] // test hostname only, not url
+    , whiteList: [['github.com',1], ['plusone.google.com', 1], ['weibo.cn', 0]] // test hostname only, not url
     , debug: false
     , reqOptions: {
         host: 'test.com'
@@ -58,7 +58,8 @@ describe('encodev2', function(){
               .should.equal('https://nowall.be/foo/bar.jpg?px!=test.com#anchor');
             // whiteList
             encode.encodeUrl('http://github.com').should.equal('http://github.com');
-            encode.encodeUrl('http://guileen.github.com').should.equal('http://guileen.github.com');
+            encode.encodeUrl('http://guileen.github.com').should.equal('https://guileen.github.com');
+            encode.encodeUrl('http://guileen.weibo.cn').should.equal('http://guileen.weibo.cn');
         })
 
         it('should no more path', function(){
