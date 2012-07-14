@@ -4,7 +4,7 @@ var cluster = require('cluster')
   , numCPUs = os.cpus().length;
 
 var MEGA = 1024 * 1024
-  , MIN_FREE_MEM = 30 * MEGA
+  , MIN_FREE_MEM = 80 * MEGA
   ;
 
 if(process.version < 'v0.8') {
