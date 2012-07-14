@@ -1,7 +1,7 @@
 var whitelist = exports.whitelist = [
   "github.com"
-, "www.google-analytics.com"
-, "pagead2.googlesyndication.com"
+, "google-analytics.com"
+, "googlesyndication.com"
 , "doubleclick.net"
 , "slidesharecdn.com"
 , "linkedin.com"
