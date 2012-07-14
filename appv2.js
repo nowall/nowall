@@ -110,7 +110,6 @@ app.post('/signup', function(req, res) {
 });
 
 app.get('/search', function(req, res) {
-    return req.on('end', function() {
         var m, q, url, _ref;
         q = utils.decodeX(q);
         q = req.query.q.trim();
@@ -123,7 +122,6 @@ app.get('/search', function(req, res) {
           });
         }
         return res.redirect(encode.encodeUrl(url));
-    });
 });
 
 if (!module.parent) {
