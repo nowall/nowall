@@ -3,6 +3,9 @@ var whitelist = exports.whitelist = [
 , "www.google-analytics.com"
 , "pagead2.googlesyndication.com"
 , "doubleclick.net"
+, "slidesharecdn.com"
+, "linkedin.com"
+, "apis.google.com"
 , "cn"
 , "weibo.com"
 ]
