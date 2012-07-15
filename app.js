@@ -44,8 +44,8 @@ app.helpers({
 });
 
 app.get('/', function(req, res) {
-    // res.redirect('/here');
-    res.redirect(config.httpsURL + '/here!/')
+    res.redirect('/here');
+    // res.redirect(config.httpsURL + '/here!/')
 });
 
 app.get('/here', function(req, res) {
