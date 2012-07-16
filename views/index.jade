@@ -9,7 +9,7 @@
     p
       button.button.primary.big(type='submit')
         p No WALL 
-        p(dir='rtl') لا جدار
+        //- p(dir='rtl') لا جدار
 
   //- .donation
   //-   p Nowall需要你的支持
@@ -20,10 +20,23 @@
   //-   |
   //-   a(href="https://ssl.nowall.be/?px!=www.bullogger.com") 牛博 via Nowall
 
-  a(href='http://www.linode.com/?r=94d2619aa76f5ffbd8d0869d575829f311322f69') 
-    .donation
-      p Host by
-      img(src='http://www.linode.com/images/linode_logo_gray.png', alt='Linode')
+  .donation
+    p NoWall 需要你的支持
+    a(style='display:inline-block;', href='http://s.click.taobao.com/t_8?e=7HZ5x%2BOzcB81%2FKwQ3boC%2B768vJQ%3D&p=mm_10985266_0_0', target='_blank')
+      img(src='/images/tuoxie-32.jpg')
+      p 买双拖鞋
+    &nbsp;
+    a(style='display:inline-block;', href='http://s.click.taobao.com/t_8?e=7HZ5x%2BOzdscr2ViNrYo2cj%2Bpb3g%3D&p=mm_10985266_0_0', target='_blank')
+      img(src='/images/kuzi-32.jpg')
+      p 买条裤子
+  //- .donation
+  //-   <iframe width="250" height="250" src="http://z.alimama.com/cps_campaign.php?id=2227727&si=34&p=mm_10985266_0_0&unid=" frameborder="0" marginheight="0" marginwidth="0" border="0" scrolling="no" name="alimamaifrm"></iframe>
+
+  //- .donation
+  //-   <iframe width="250" height="250" src="http://z.alimama.com/cps_campaign.php?id=2193762&si=32&p=mm_10985266_0_0&unid=" frameborder="0" marginheight="0" marginwidth="0" border="0" scrolling="no" name="alimamaifrm"></iframe>
+
+  //- .donation
+  //-   <iframe width="658" height="60" src="http://z.alimama.com/cps_campaign.php?id=2227727&si=16&p=mm_10985266_0_0&unid=" frameborder="0" marginheight="0" marginwidth="0" border="0" scrolling="no" name="alimamaifrm"></iframe>
   .footer
     if(version == 'v1')
       a(href="https://ssl.#{config.server}#{config.httpsPortSuffix}/here!/") 切换到SSL版(New)
@@ -37,11 +50,16 @@
     a(href="https://ssl.nowall.be/?px!=https:twitter.com#!/NowallBe") NowallBe@Twitter
     &nbsp;|&nbsp;
     a(href="https://chrome.google.com/webstore/detail/hghdlbnadahkknlbmckfljpcoilldcoa") 
-      img(src="#{base_url}/images/chrome_store_24x24.png")
+      img(src="#{base_url}/images/chrome_store_16x16.png")
       | 安装NoWall插件
+    &nbsp;|&nbsp;
     a(href="http://nowall.be/chrome/nowall.crx")
       img(src="#{base_url}/images/nowall_16x16.png")
       | 本地安装NoWall插件
+    &nbsp;|&nbsp;
+    a(href='http://www.linode.com/?r=94d2619aa76f5ffbd8d0869d575829f311322f69')
+      span VPS Host
+      img(src='/images/linode_80.png', alt='Linode')
 
   .google-ad
     script
