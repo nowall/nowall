@@ -1,4 +1,5 @@
 var template = require('../lib/template');
+var utils = require('../lib/utils');
 
 var exports = module.exports = function(req, res, sreq, sres, next){
   var vid = exports.getVid(req);
@@ -32,13 +33,18 @@ exports.getVid = function(req) {
 // <script>
 // </script>
 exports.replacePlayer = function(body, player) {
-  return body.replace(/<div id="watch-player" class="flash-player"><\/div>[\s\S]*?<script\s?[^>]*>([\s\S]*?)<\/script>/, function(full, script) {
+  return exports.replaceScript(body, function(full, script) {
       var flashvars = exports.stripFlashvars(script);
       if(!flashvars) return full;
-      // console.log(flashvars);
-      flashvars.flvurl = flashvars.url_encoded_fmt_stream_map.url;
+      console.log(flashvars);
+      var flvurl = flashvars.url_encoded_fmt_stream_map.url;
+      flashvars.flvurl = 'https://ssl.nowall.be/' + utils.encodeSymboUrl(flvurl);
       return template.render(player, flashvars);
-  })
+  });
+};
+
+exports.replaceScript = function(body, replacer) {
+  return body.replace(/<div id="watch-player" class="flash-player"><\/div>[\s\S]*?<script\s?[^>]*>([\s\S]*?)<\/script>/, replacer);
 }
 
 // most important
