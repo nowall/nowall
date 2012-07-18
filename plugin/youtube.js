@@ -10,7 +10,7 @@ var exports = module.exports = function(req, res, sreq, sres, next){
     template.load('flvplayer.html', function(err, data) {
         if(err) return next(err);
         console.log('loaded template');
-        res.body = exports.replacePlayer(res.body, data);
+        res.body = exports.replacePlayer(res.body, data, vid);
         next();
     })
   } else {
@@ -32,13 +32,15 @@ exports.getVid = function(req) {
 // <div id="watch-player" class="flash-player"></div>
 // <script>
 // </script>
-exports.replacePlayer = function(body, player) {
+exports.replacePlayer = function(body, player, vid) {
   return exports.replaceScript(body, function(full, script) {
       var flashvars = exports.stripFlashvars(script);
       if(!flashvars) return full;
       console.log(flashvars);
       var flvurl = flashvars.url_encoded_fmt_stream_map.url;
       flashvars.flvurl = 'https://ssl.nowall.be' + utils.encodeSymboUrl(flvurl);
+      flashvars.vid = vid;
+      flashvars.thumbnail = 'https://i3.ytimg.com/vi/' + vid + '/default.jpg';
       return template.render(player, flashvars);
   });
 };
