@@ -1,48 +1,7 @@
-<p>
-  <a href="{flvurl}" target="_blank">
-    <img src="{thumbnail}">
-    <p>NoWall-Play Video</p>
-  </a>
-  <p>{videotype}</p>
-  <p>{mimetype}</p>
-</p>
-<!--
-<div id="watch-player" class="flash-player"></div>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.1/swfobject.js"></script>
-<script type="text/javascript">
-//<![CDATA[
-(function() {
-
-	var flashvars = {};
-	flashvars.image = "";	
-	
-  flashvars.movie = "{flvurl}";
-	flashvars.autoplay = "false";
-	flashvars.loop = "false";
-	
-	flashvars.autohide = "true";
-	
-	flashvars.fullscreen = "true";
-	
-	flashvars.color_text = "0xFFFFFF";
-	flashvars.color_seekbar = "0x13ABEC";
-	flashvars.color_loadingbar = "0x828282";
-	flashvars.color_seekbarbg = "0x753775";
-	
-	flashvars.color_button_out = "0x333333";
-	flashvars.color_button_over = "0x000000";
-	flashvars.color_button_highlight = "0xffffff";
-	
-	var params = {};
-	params.allowfullscreen = "true";
-	params.allowscriptaccess = "always";
-	params.bgcolor = "#000000";
-	
-	var attributes = {};
-	attributes.align = "middle";
-	
-	swfobject.embedSWF("https://ssl.nowall.be/swf/player.swf", "watch-player", "400", "300", "9.0.45", "", flashvars, params, attributes);
-})();
-//]]>
-</script>
--->
+<link href="http://vjs.zencdn.net/c/video-js.css" rel="stylesheet">
+<script src="http://vjs.zencdn.net/c/video.js"></script>
+<video id="my_video_1" class="video-js vjs-default-skin" controls
+  preload="none" width="640" height="320" poster="{thumbnail}"
+  data-setup="{}">
+  <source src="{flvurl}" type='video/mp4'>
+</video>
