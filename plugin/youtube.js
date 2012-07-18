@@ -46,6 +46,8 @@ exports.replacePlayer = function(body, player, vid) {
       // var info = exports.getVideoInfo(body)
       console.log(flashvars);
       flashvars.flvurl = flashvars.url_encoded_fmt_stream_map.url;
+      flashvars.videotype = flashvars.url_encoded_fmt_stream_map.type;
+      flashvars.mimetype = flashvars.videotype.split(';')[0];
       // flashvars.flvurl = 'https://ssl.nowall.be' + utils.encodeSymboUrl(flashvars.flvurl);
       flashvars.vid = vid;
       // small tb
