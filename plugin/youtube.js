@@ -27,6 +27,13 @@ exports.getVid = function(req) {
   }
 }
 
+exports.getVideoInfo = function(body) {
+  var info = {};
+  info.thumbnailUrl = body.match(/<link itemprop=\"thumbnailUrl\" href="(.*?)">/)[1];
+  info.thumbnailMidUrl = body.match(/<span itemprop=\"thumbnail\" (?:[\s\S]*?)<link itemprop="url" href="(.*?)">/)[1];
+  return info;
+}
+
 // youtube key fregment
 //
 // <div id="watch-player" class="flash-player"></div>
@@ -36,11 +43,17 @@ exports.replacePlayer = function(body, player, vid) {
   return exports.replaceScript(body, function(full, script) {
       var flashvars = exports.stripFlashvars(script);
       if(!flashvars) return full;
+      // var info = exports.getVideoInfo(body)
       console.log(flashvars);
       flashvars.flvurl = flashvars.url_encoded_fmt_stream_map.url;
       // flashvars.flvurl = 'https://ssl.nowall.be' + utils.encodeSymboUrl(flashvars.flvurl);
       flashvars.vid = vid;
-      flashvars.thumbnail = 'https://i3.ytimg.com/vi/' + vid + '/default.jpg';
+      // small tb
+      // flashvars.thumbnail = 'https://i3.ytimg.com/vi/' + vid + '/default.jpg';
+      // middle tb
+      flashvars.thumbnail = 'https://i3.ytimg.com/vi/' + vid + '/mqdefault.jpg';
+      // large tb
+      // flashvars.thumbnail = 'https://i3.ytimg.com/vi/' + vid + '/hqdefault.jpg';
       return template.render(player, flashvars);
   });
 };
