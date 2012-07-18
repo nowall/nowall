@@ -4,6 +4,7 @@ var whitelist = exports.whitelist = [
 , ["google-analytics.com", 1]
 , ["googlesyndication.com", 1]
 , ["doubleclick.net", 1 ]
+, ["zencdn.net", 1 ]
 , ["slidesharecdn.com", 1]
   // , "images.slidesharecdn.com"
   // , "public.slidesharecdn.com"

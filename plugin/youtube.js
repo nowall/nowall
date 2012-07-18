@@ -1,4 +1,5 @@
 var template = require('../lib/template');
+var utils = require('../lib/utils');
 
 var exports = module.exports = function(req, res, sreq, sres, next){
   var vid = exports.getVid(req);
@@ -9,7 +10,7 @@ var exports = module.exports = function(req, res, sreq, sres, next){
     template.load('flvplayer.html', function(err, data) {
         if(err) return next(err);
         console.log('loaded template');
-        res.body = exports.replacePlayer(res.body, data);
+        res.body = exports.replacePlayer(res.body, data, vid);
         next();
     })
   } else {
@@ -26,19 +27,41 @@ exports.getVid = function(req) {
   }
 }
 
+exports.getVideoInfo = function(body) {
+  var info = {};
+  info.thumbnailUrl = body.match(/<link itemprop=\"thumbnailUrl\" href="(.*?)">/)[1];
+  info.thumbnailMidUrl = body.match(/<span itemprop=\"thumbnail\" (?:[\s\S]*?)<link itemprop="url" href="(.*?)">/)[1];
+  return info;
+}
+
 // youtube key fregment
 //
 // <div id="watch-player" class="flash-player"></div>
 // <script>
 // </script>
-exports.replacePlayer = function(body, player) {
-  return body.replace(/<div id="watch-player" class="flash-player"><\/div>[\s\S]*?<script\s?[^>]*>([\s\S]*?)<\/script>/, function(full, script) {
+exports.replacePlayer = function(body, player, vid) {
+  return exports.replaceScript(body, function(full, script) {
       var flashvars = exports.stripFlashvars(script);
       if(!flashvars) return full;
-      // console.log(flashvars);
+      // var info = exports.getVideoInfo(body)
+      console.log(flashvars);
       flashvars.flvurl = flashvars.url_encoded_fmt_stream_map.url;
+      flashvars.videotype = flashvars.url_encoded_fmt_stream_map.type;
+      flashvars.mimetype = flashvars.videotype.split(';')[0];
+      // flashvars.flvurl = 'https://ssl.nowall.be' + utils.encodeSymboUrl(flashvars.flvurl);
+      flashvars.vid = vid;
+      // small tb
+      // flashvars.thumbnail = 'https://i3.ytimg.com/vi/' + vid + '/default.jpg';
+      // middle tb
+      flashvars.thumbnail = 'https://i3.ytimg.com/vi/' + vid + '/mqdefault.jpg';
+      // large tb
+      // flashvars.thumbnail = 'https://i3.ytimg.com/vi/' + vid + '/hqdefault.jpg';
       return template.render(player, flashvars);
-  })
+  });
+};
+
+exports.replaceScript = function(body, replacer) {
+  return body.replace(/<div id="watch-player" class="flash-player"><\/div>[\s\S]*?<script\s?[^>]*>([\s\S]*?)<\/script>/, replacer);
 }
 
 // most important
