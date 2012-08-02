@@ -107,7 +107,6 @@ function redirectToHttps (req, res, next) {
 
 var appv1 = connect()
   .use(connect.favicon(__dirname + '/public/images/favicon.ico'))
-  .use(connect.vhost('ipn.' + config.server, require('./routes/ipn')))
   .use(connect.vhost('v1.' + config.server, require('./app')))
   .use(redirectToHttps)
   .use(connect.vhost(config.server, require('./app')))

@@ -1,7 +1,6 @@
 var express = require('express'),
     config = require('./config'),
     querystring = require('querystring'),
-    db = require('./lib/store'),
     utils = require('./lib/utils'),
     app = module.exports = express.createServer();
 
@@ -66,46 +65,6 @@ app.post('/donation/cancel', function(req, res) {
     res.render('donation_cancel', {
         title: 'Thank you',
         data: req.body
-    });
-});
-
-app.get('/signup', function(req, res) {
-    var email = req.query.email,
-        verify_code = req.query.verify_code;
-
-    db.user.findOne({email: email, verify_code: verify_code}, function(err, result){
-        if(!result){
-          res.render('404',function(err,result){
-              res.send(result, 404);
-          });
-        } else {
-          res.render('signup', {
-              user : result
-          });
-        }
-    });
-});
-
-app.post('/signup', function(req, res) {
-    var email = req.body.email,
-        verify_code = req.body.verify_code;
-    console.dir(req.body);
-
-    db.user.update({email: email, verify_code: verify_code},
-      {
-        $set: {password: req.body.password},
-        $unset: {verify_code: 1}
-      },
-      function(err, reply){
-        console.dir(reply);
-        if(err){
-          res.render('500',function(err, result){
-              res.send(result, 500)
-          });
-        } else {
-          req.flash('info', '注册成功')
-          res.redirect('/');
-        }
     });
 });
 
