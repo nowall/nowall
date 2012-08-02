@@ -1,3 +1,5 @@
+var utils = require('../lib/utils');
+
 var exports = module.exports = function(creq, cres, sreq, sres, next, logger) {
 
   var encoder = sreq.encoder;
@@ -5,7 +7,7 @@ var exports = module.exports = function(creq, cres, sreq, sres, next, logger) {
   var headers = encoder.encodeResponseHeaders(cres.headers, creq);
 
   var contentType = cres.headers['content-type'];
-  var isText = contentType && /(text|javascript)/.test(contentType) && contentType != 'text/plain';
+  var isText = utils.isText(contentType) && contentType != 'text/plain';
   var isScript = contentType && /javascript/.test(contentType) ||
                  (isText && ! /text\/(css|html)/.test(contentType)) ||
                  /\.js(\?|#|$)/.test(creq.path);
