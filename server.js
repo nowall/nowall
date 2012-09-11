@@ -91,7 +91,9 @@ var appv2 = module.exports = connect()
   ;
 
 function redirectToHttps (req, res, next) {
-  res.redirect(config.httpsURL);
+  res.writeHead(302, {
+      location: config.httpsURL
+  });
   /*
   if(req.method === 'GET' &&
     req.headers.cookie &&
@@ -110,9 +112,9 @@ function redirectToHttps (req, res, next) {
 
 var appv1 = connect()
   .use(connect.favicon(__dirname + '/public/images/favicon.ico'))
+  .use(redirectToHttps)
   .use(connect.vhost('ipn.' + config.server, require('./routes/ipn')))
   .use(connect.vhost('v1.' + config.server, require('./app')))
-  .use(redirectToHttps)
   .use(connect.vhost(config.server, require('./app')))
   .use(block_bot)
   .use(connect.vhost('*.' + config.server, proxyv1))
