@@ -131,7 +131,7 @@ if(httpsPort) {
 // http.createServer(appv1).listen(httpPort);
 http.createServer(function(req, res) {
     res.writeHead(302, {
-        location: config.httpsURL
+        location: config.httpsURL + '/here!/'
     });
     res.end();
 }).listen(httpPort);
