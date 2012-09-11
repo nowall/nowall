@@ -91,10 +91,6 @@ var appv2 = module.exports = connect()
   ;
 
 function redirectToHttps (req, res, next) {
-  res.writeHead(302, {
-      location: config.httpsURL
-  });
-  /*
   if(req.method === 'GET' &&
     req.headers.cookie &&
     req.headers.cookie.indexOf('nowall_version=2') >= 0) {
@@ -107,15 +103,14 @@ function redirectToHttps (req, res, next) {
   } else {
     next();
   }
-  */
 }
 
 var appv1 = connect()
   .use(connect.favicon(__dirname + '/public/images/favicon.ico'))
-  .use(redirectToHttps)
   .use(connect.vhost('ipn.' + config.server, require('./routes/ipn')))
   .use(connect.vhost('v1.' + config.server, require('./app')))
   .use(connect.vhost(config.server, require('./app')))
+  .use(redirectToHttps)
   .use(block_bot)
   .use(connect.vhost('*.' + config.server, proxyv1))
   .use(require('./app'));
@@ -133,4 +128,10 @@ if(httpsPort) {
 
   https.createServer(options, appv2).listen(httpsPort);
 }
-http.createServer(appv1).listen(httpPort);
+// http.createServer(appv1).listen(httpPort);
+http.createServer(function(req, res) {
+    res.writeHead(302, {
+        location: config.httpsURL
+    });
+    res.end();
+}).listen(httpPort);
