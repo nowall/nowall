@@ -36,7 +36,7 @@ var httpsPort = config.httpsPort
   , httpPort = config.httpPort
   , httpPortSuffix = config.httpPortSuffix = httpPort == 80 ? '' : ':' + httpPort
   , httpsPortSuffix = config.httpsPortSuffix = httpsPort == 443 ? '' : ':' + httpsPort
-  , httpURL = config.httpURL = 'http://ssl.' + config.server + config.httpPortSuffix
+  , httpURL = config.httpURL = 'http://' + config.server + config.httpPortSuffix
   , httpsURL = config.httpsURL = 'https://ssl.' + config.server + config.httpsPortSuffix
   , logger = config.logger.getLogger('server');
   ;
@@ -91,6 +91,8 @@ var appv2 = module.exports = connect()
   ;
 
 function redirectToHttps (req, res, next) {
+  res.redirect(config.httpsURL);
+  /*
   if(req.method === 'GET' &&
     req.headers.cookie &&
     req.headers.cookie.indexOf('nowall_version=2') >= 0) {
@@ -103,6 +105,7 @@ function redirectToHttps (req, res, next) {
   } else {
     next();
   }
+  */
 }
 
 var appv1 = connect()
