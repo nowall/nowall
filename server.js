@@ -111,8 +111,8 @@ function redirectToHttps (req, res, next) {
 var appv1 = connect()
   .use(connect.favicon(__dirname + '/public/images/favicon.ico'))
   .use(connect.vhost('v1.' + config.server, require('./app')))
-  .use(redirectToHttps)
   .use(connect.vhost(config.server, require('./app')))
+  .use(redirectToHttps)
   .use(block_bot)
   .use(connect.vhost('*.' + config.server, proxyv1))
   .use(require('./app'));
@@ -130,4 +130,10 @@ if(httpsPort) {
 
   https.createServer(options, appv2).listen(httpsPort);
 }
-http.createServer(appv1).listen(httpPort);
+// http.createServer(appv1).listen(httpPort);
+http.createServer(function(req, res) {
+    res.writeHead(302, {
+        location: config.httpsURL + '/here!/'
+    });
+    res.end();
+}).listen(httpPort);
