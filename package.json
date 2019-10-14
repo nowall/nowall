@@ -12,7 +12,7 @@
     "node": ">=0.6.0"
   },
   "dependencies": {
-    "express": "=2.5.9"
+    "express": "=4.17.1"
   , "jade": ">=0.1.0"
   , "jst": ">=0.0.1"
   , "stylus": ">=0.0.1"
