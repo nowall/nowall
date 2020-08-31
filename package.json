@@ -16,7 +16,7 @@
   , "jade": ">=0.1.0"
   , "jst": ">=0.0.1"
   , "stylus": ">=0.0.1"
-  , "connect": "2.1.x"
+  , "connect": "3.7.x"
   , "hiredis":">=0.0.1"
   , "redis":">=0.0.1"
   , "connect-redis": ">=0.0.1"
